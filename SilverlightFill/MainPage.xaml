@@ -19,8 +19,8 @@
         <sdk:GridSplitter Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Stretch" Background="Gray" ShowsPreview="True" Width="5"/>
 
         <StackPanel Grid.Column="2">
-            <Button Name="btn1">Clear</Button>
-            <Button Name="btn2">Fill</Button>
+            <Button Click="clear">Clear</Button>
+            <Button Name="fillButton" Click="fill">Fill</Button>
             <Grid Margin="0,10,0,5">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
@@ -28,7 +28,7 @@
                 </Grid.ColumnDefinitions>
 
                 <sdk:Label>Replacement</sdk:Label>
-                <Rectangle Fill="Red" Height="20" Width="20" Grid.Column="1"/>
+                <Rectangle Name="replaceBox" Fill="Red" Height="20" Width="20" Stroke="Gray" Grid.Column="1"/>
             </Grid>
 
             <Grid>
@@ -39,37 +39,37 @@
                 </Grid.ColumnDefinitions>
 
                 <StackPanel Grid.Column="0">
-                    <Button Height="30">
+                    <Button Height="30" Click="buttonRed">
                         <Rectangle Fill="Red" Height="30" Width="30"/>
                     </Button>
-                    <Button Height="30">
+                    <Button Height="30" Click="buttonGreen">
                         <Rectangle Fill="Green" Height="30" Width="30"/>
                     </Button>
-                    <Button Height="30">
-                        <Rectangle Fill="Violet" Height="30" Width="30"/>
+                    <Button Height="30" Click="buttonMagenta">
+                        <Rectangle Fill="Magenta" Height="30" Width="30"/>
                     </Button>
                 </StackPanel>
 
                 <StackPanel Grid.Column="1">
-                    <Button Height="30">
+                    <Button Height="30" Click="buttonOrange">
                         <Rectangle Fill="Orange" Height="30" Width="30"/>
                     </Button>
-                    <Button Height="30">
+                    <Button Height="30" Click="buttonBlue">
                         <Rectangle Fill="Blue" Height="30" Width="30"/>
                     </Button>
-                    <Button Height="30">
-                        <Rectangle Fill="Indigo" Height="30" Width="30"/>
+                    <Button Height="30" Click="buttonBlack">
+                        <Rectangle Fill="Black" Height="30" Width="30"/>
                     </Button>
                 </StackPanel>
 
                 <StackPanel Grid.Column="2">
-                    <Button Height="30">
+                    <Button Height="30" Click="buttonYellow">
                         <Rectangle Fill="Yellow" Height="30" Width="30"/>
                     </Button>
-                    <Button Height="30">
-                        <Rectangle Fill="Black" Height="30" Width="30"/>
+                    <Button Height="30" Click="buttonPurple">
+                        <Rectangle Fill="Purple" Height="30" Width="30"/>
                     </Button>
-                    <Button Height="30">
+                    <Button Height="30" Click="buttonWhite">
                         <Rectangle Fill="White" Height="30" Width="30"/>
                     </Button>
                 </StackPanel>
