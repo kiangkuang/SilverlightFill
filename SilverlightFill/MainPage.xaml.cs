@@ -16,7 +16,7 @@ namespace SilverlightFill
 {
     public partial class MainPage : UserControl
     {
-        private Color color = Colors.Red;
+        private Color selectedColor = Colors.Red;
         private Boolean fillmode = false;
         private Stroke newStroke = null;
         private WriteableBitmap wb;
@@ -27,61 +27,58 @@ namespace SilverlightFill
             InitializeComponent();
         }
 
-         private void convertToBitmap()
+        private void convertToBitmap()
         {
             // render InkCanvas' visual tree to the RenderTargetBitmap
-            wb = new WriteableBitmap(1500, 1500);
+            wb = new WriteableBitmap((int)inkCanvas.ActualWidth, (int)inkCanvas.ActualHeight);
             wb.Render(inkCanvas, new TranslateTransform());
             wb.Invalidate();
-
         }
 
         private void buttonRed(object sender, RoutedEventArgs e)
         {
             replaceBox.Fill = new SolidColorBrush(Colors.Red);
-            color = Colors.Red;
+            selectedColor = Colors.Red;
         }
-
         private void buttonOrange(object sender, RoutedEventArgs e)
         {
             replaceBox.Fill = new SolidColorBrush(Colors.Orange);
-            color = Colors.Orange;
+            selectedColor = Colors.Orange;
         }
-
         private void buttonYellow(object sender, RoutedEventArgs e)
         {
             replaceBox.Fill = new SolidColorBrush(Colors.Yellow);
-            color = Colors.Yellow;
+            selectedColor = Colors.Yellow;
         }
         private void buttonGreen(object sender, RoutedEventArgs e)
         {
             replaceBox.Fill = new SolidColorBrush(Colors.Green);
-            color = Colors.Green;
+            selectedColor = Colors.Green;
         }
         private void buttonBlue(object sender, RoutedEventArgs e)
         {
             replaceBox.Fill = new SolidColorBrush(Colors.Blue);
-            color = Colors.Blue;
+            selectedColor = Colors.Blue;
         }
         private void buttonMagenta(object sender, RoutedEventArgs e)
         {
             replaceBox.Fill = new SolidColorBrush(Colors.Magenta);
-            color = Colors.Magenta;
+            selectedColor = Colors.Magenta;
         }
         private void buttonPurple(object sender, RoutedEventArgs e)
         {
             replaceBox.Fill = new SolidColorBrush(Colors.Purple);
-            color = Colors.Purple;
+            selectedColor = Colors.Purple;
         }
         private void buttonBlack(object sender, RoutedEventArgs e)
         {
             replaceBox.Fill = new SolidColorBrush(Colors.Black);
-            color = Colors.Black;
+            selectedColor = Colors.Black;
         }
         private void buttonWhite(object sender, RoutedEventArgs e)
         {
             replaceBox.Fill = new SolidColorBrush(Colors.White);
-            color = Colors.White;
+            selectedColor = Colors.White;
         }
 
         private void clear(object sender, RoutedEventArgs e)
@@ -93,7 +90,6 @@ namespace SilverlightFill
 
         private void fill(object sender, RoutedEventArgs e)
         {
-            convertToBitmap();
 
             if (fillmode == false)
             {
@@ -143,10 +139,75 @@ namespace SilverlightFill
             }
             else
             {
+                convertToBitmap();
                 // fill method here
+                Color targetColor = wb.GetPixel((int)e.GetPosition(inkCanvas).X, (int)e.GetPosition(inkCanvas).Y);
+                
+                floodfill(new Point((int)e.GetPosition(inkCanvas).X, (int)e.GetPosition(inkCanvas).Y), targetColor, selectedColor);
             }
             
         }
 
+        private void floodfill(Point pt, Color targetColor, Color replacementColor)
+        {
+            Queue<Point> q = new Queue<Point>();
+
+            if (!ColorMatch(wb.GetPixel((int)pt.X,(int)pt.Y), targetColor))
+                return;
+
+            q.Enqueue(pt);
+
+            while (q.Count > 0)
+            {
+                Point n = q.Dequeue();
+
+                if (ColorMatch(wb.GetPixel((int)n.X, (int)n.Y), targetColor)) //AreColorsSimilar(bitmap.GetPixel(n.X, n.Y), targetColor, 20)
+                {
+                    Point w = n;
+                    Point e = n;
+
+                    while ((w.X > 0) && (w.X < wb.PixelWidth) && ColorMatch(wb.GetPixel((int)w.X, (int)w.Y), targetColor))//AreColorsSimilar(bitmap.GetPixel(w.X, w.Y), targetColor, 50)) //
+                    {
+                        w.X--;
+                    }
+
+                    while ((e.X >= 0) && (e.X < wb.PixelWidth) && ColorMatch(wb.GetPixel((int)e.X, (int)e.Y), targetColor))//AreColorsSimilar(bitmap.GetPixel(e.X, e.Y), targetColor, 50)) //
+                    {
+                        e.X++;
+                    }
+
+                    StylusPointCollection stylusPoints = new StylusPointCollection();
+                    stylusPoints.Add(new StylusPoint(w.X + 1, w.Y));
+                    stylusPoints.Add(new StylusPoint(e.X, w.Y));
+                    Stroke stroke = new Stroke(stylusPoints);
+
+                    stroke.DrawingAttributes.Color = replacementColor;
+                    inkCanvas.Strokes.Add(stroke);
+
+
+                    for (int i = (int)w.X + 1; i < e.X; i++)
+                    {
+                        wb.SetPixel(i, (int)w.Y, replacementColor);
+                        if ((i > 0) && (i <= wb.PixelWidth) && (w.Y + 1 < wb.PixelHeight) && ColorMatch(wb.GetPixel(i, (int)w.Y + 1), targetColor))
+                        {
+                            q.Enqueue(new Point(i, w.Y + 1));
+                        }
+
+                        if ((i > 0) && (w.Y - 1 >= 0) && ColorMatch(wb.GetPixel(i, (int)w.Y - 1), targetColor))
+                        {
+                            q.Enqueue(new Point(i, w.Y - 1));
+                        }
+
+                    }
+
+                }
+            }
+
+        }
+
+        private static bool ColorMatch(Color a, Color b)
+        {
+            return (a.Equals(b));
+        }
     }
 }
