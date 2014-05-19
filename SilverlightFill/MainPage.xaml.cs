@@ -9,13 +9,15 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Shapes;
+using System.Windows.Ink;
 
 namespace SilverlightFill
 {
     public partial class MainPage : UserControl
     {
-        public Color color = Colors.Red;
-        public Boolean fillmode = false;
+        private Color color = Colors.Red;
+        private Boolean fillmode = false;
+        private Stroke newStroke = null;
         public MainPage()
         {
             InitializeComponent();
@@ -72,6 +74,7 @@ namespace SilverlightFill
         private void clear(object sender, RoutedEventArgs e)
         {
             inkCanvas.Strokes.Clear();
+            strokeCounter.Content = "Strokes: " + inkCanvas.Strokes.Count;
         }
 
         private void fill(object sender, RoutedEventArgs e)
@@ -88,7 +91,28 @@ namespace SilverlightFill
             }
         }
 
+        private void inkCanvas_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            inkCanvas.CaptureMouse();
+            newStroke = new Stroke();
+            newStroke.StylusPoints.Add(e.StylusDevice.GetStylusPoints(inkCanvas));
+            inkCanvas.Strokes.Add(newStroke);
+        }
 
+        private void inkCanvas_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (newStroke != null)
+            {
+                newStroke.StylusPoints.Add(e.StylusDevice.GetStylusPoints(inkCanvas));
+            }
+        }
+
+        private void inkCanvas_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            newStroke = null;
+            inkCanvas.ReleaseMouseCapture();
+            strokeCounter.Content = "Strokes: " + inkCanvas.Strokes.Count;
+        }
 
     }
 }
