@@ -110,21 +110,24 @@ namespace SilverlightFill
 
         private void inkCanvas_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            inkCanvas.CaptureMouse();
-            newStroke = new Stroke();
-            lineList.Add(newStroke);
-            newStroke.DrawingAttributes.Color = Colors.Black;
-            //newStroke.DrawingAttributes.OutlineColor = Colors.White;
-            newStroke.DrawingAttributes.Height = 5;
-            newStroke.DrawingAttributes.Width = 5;
-            
-            newStroke.StylusPoints.Add(e.StylusDevice.GetStylusPoints(inkCanvas));
-            inkCanvas.Strokes.Add(newStroke);
+            if (fillmode == false)
+            {
+                inkCanvas.CaptureMouse();
+                newStroke = new Stroke();
+                lineList.Add(newStroke);
+                newStroke.DrawingAttributes.Color = Colors.Black;
+                //newStroke.DrawingAttributes.OutlineColor = Colors.White;
+                newStroke.DrawingAttributes.Height = 5;
+                newStroke.DrawingAttributes.Width = 5;
+
+                newStroke.StylusPoints.Add(e.StylusDevice.GetStylusPoints(inkCanvas));
+                inkCanvas.Strokes.Add(newStroke);
+            }
         }
 
         private void inkCanvas_MouseMove(object sender, MouseEventArgs e)
         {
-            if (newStroke != null)
+            if (fillmode == false && newStroke != null)
             {
                 newStroke.StylusPoints.Add(e.StylusDevice.GetStylusPoints(inkCanvas));
             }
@@ -132,9 +135,17 @@ namespace SilverlightFill
 
         private void inkCanvas_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
-            newStroke = null;
-            inkCanvas.ReleaseMouseCapture();
-            strokeCounter.Content = "Strokes: " + inkCanvas.Strokes.Count;
+            if (fillmode == false)
+            {
+                newStroke = null;
+                inkCanvas.ReleaseMouseCapture();
+                strokeCounter.Content = "Strokes: " + inkCanvas.Strokes.Count;
+            }
+            else
+            {
+                // fill method here
+            }
+            
         }
 
     }
