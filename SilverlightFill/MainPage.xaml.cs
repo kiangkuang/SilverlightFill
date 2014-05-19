@@ -84,6 +84,7 @@ namespace SilverlightFill
         private void clear(object sender, RoutedEventArgs e)
         {
             inkCanvas.Strokes.Clear();
+            lineList.Clear();
             convertToBitmap();
             strokeCounter.Content = "Strokes: " + inkCanvas.Strokes.Count;
         }
@@ -144,6 +145,12 @@ namespace SilverlightFill
                 Color targetColor = wb.GetPixel((int)e.GetPosition(inkCanvas).X, (int)e.GetPosition(inkCanvas).Y);
                 
                 floodfill(new Point((int)e.GetPosition(inkCanvas).X, (int)e.GetPosition(inkCanvas).Y), targetColor, selectedColor);
+
+                foreach (Stroke s in lineList)
+                {
+                    inkCanvas.Strokes.Remove(s);
+                    inkCanvas.Strokes.Add(s);
+                }
             }
             
         }
@@ -163,10 +170,10 @@ namespace SilverlightFill
 
                 if (ColorMatch(wb.GetPixel((int)n.X, (int)n.Y), targetColor)) //AreColorsSimilar(bitmap.GetPixel(n.X, n.Y), targetColor, 20)
                 {
-                    Point w = n;
-                    Point e = n;
+                    Point w = new Point(n.X, n.Y);
+                    Point e = new Point(n.X, n.Y);
 
-                    while ((w.X > 0) && (w.X < wb.PixelWidth) && ColorMatch(wb.GetPixel((int)w.X, (int)w.Y), targetColor))//AreColorsSimilar(bitmap.GetPixel(w.X, w.Y), targetColor, 50)) //
+                    while ((w.X >= 0) && (w.X < wb.PixelWidth) && ColorMatch(wb.GetPixel((int)w.X, (int)w.Y), targetColor))//AreColorsSimilar(bitmap.GetPixel(w.X, w.Y), targetColor, 50)) //
                     {
                         w.X--;
                     }
@@ -177,23 +184,23 @@ namespace SilverlightFill
                     }
 
                     StylusPointCollection stylusPoints = new StylusPointCollection();
-                    stylusPoints.Add(new StylusPoint(w.X + 1, w.Y));
-                    stylusPoints.Add(new StylusPoint(e.X, w.Y));
+                    stylusPoints.Add(new StylusPoint(++w.X, w.Y));
+                    stylusPoints.Add(new StylusPoint(--e.X, w.Y));
                     Stroke stroke = new Stroke(stylusPoints);
-
+                    stroke.DrawingAttributes.Height = 4;
+                    stroke.DrawingAttributes.Width = 4;
                     stroke.DrawingAttributes.Color = replacementColor;
                     inkCanvas.Strokes.Add(stroke);
 
-
-                    for (int i = (int)w.X + 1; i < e.X; i++)
+                    for (int i = (int)w.X; i <= e.X; i++)
                     {
                         wb.SetPixel(i, (int)w.Y, replacementColor);
-                        if ((i > 0) && (i <= wb.PixelWidth) && (w.Y + 1 < wb.PixelHeight) && ColorMatch(wb.GetPixel(i, (int)w.Y + 1), targetColor))
+                        if ((i >= 0) && (i < wb.PixelWidth) && (w.Y + 1 >= 0 && w.Y + 1 < wb.PixelHeight) && ColorMatch(wb.GetPixel(i, (int)w.Y + 1), targetColor))
                         {
                             q.Enqueue(new Point(i, w.Y + 1));
                         }
 
-                        if ((i > 0) && (w.Y - 1 >= 0) && ColorMatch(wb.GetPixel(i, (int)w.Y - 1), targetColor))
+                        if ((i >= 0) && (i < wb.PixelWidth) && (w.Y - 1 >= 0 && w.Y - 1 < wb.PixelHeight) && ColorMatch(wb.GetPixel(i, (int)w.Y - 1), targetColor))
                         {
                             q.Enqueue(new Point(i, w.Y - 1));
                         }
