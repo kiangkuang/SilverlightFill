@@ -19,11 +19,9 @@ namespace SilverlightFill
         private Color color = Colors.Red;
         private Boolean fillmode = false;
         private Stroke newStroke = null;
-<<<<<<< HEAD
-        public WriteableBitmap wb;
-=======
+        private WriteableBitmap wb;
         private StrokeCollection lineList = new StrokeCollection();
->>>>>>> 5b08de7352e98f05bc534f8541b161fc618b382f
+
         public MainPage()
         {
             InitializeComponent();
