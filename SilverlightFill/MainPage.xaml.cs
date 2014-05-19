@@ -18,6 +18,7 @@ namespace SilverlightFill
         private Color color = Colors.Red;
         private Boolean fillmode = false;
         private Stroke newStroke = null;
+        private StrokeCollection lineList = new StrokeCollection();
         public MainPage()
         {
             InitializeComponent();
@@ -95,6 +96,12 @@ namespace SilverlightFill
         {
             inkCanvas.CaptureMouse();
             newStroke = new Stroke();
+            lineList.Add(newStroke);
+            newStroke.DrawingAttributes.Color = Colors.Black;
+            //newStroke.DrawingAttributes.OutlineColor = Colors.White;
+            newStroke.DrawingAttributes.Height = 5;
+            newStroke.DrawingAttributes.Width = 5;
+            
             newStroke.StylusPoints.Add(e.StylusDevice.GetStylusPoints(inkCanvas));
             inkCanvas.Strokes.Add(newStroke);
         }
