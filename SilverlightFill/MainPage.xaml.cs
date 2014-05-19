@@ -10,6 +10,7 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Shapes;
 using System.Windows.Ink;
+using System.Windows.Media.Imaging;
 
 namespace SilverlightFill
 {
@@ -18,9 +19,19 @@ namespace SilverlightFill
         private Color color = Colors.Red;
         private Boolean fillmode = false;
         private Stroke newStroke = null;
+        public WriteableBitmap wb;
         public MainPage()
         {
             InitializeComponent();
+        }
+
+         private void convertToBitmap()
+        {
+            // render InkCanvas' visual tree to the RenderTargetBitmap
+            wb = new WriteableBitmap(1500, 1500);
+            wb.Render(inkCanvas, new TranslateTransform());
+            wb.Invalidate();
+
         }
 
         private void buttonRed(object sender, RoutedEventArgs e)
@@ -74,11 +85,14 @@ namespace SilverlightFill
         private void clear(object sender, RoutedEventArgs e)
         {
             inkCanvas.Strokes.Clear();
+            convertToBitmap();
             strokeCounter.Content = "Strokes: " + inkCanvas.Strokes.Count;
         }
 
         private void fill(object sender, RoutedEventArgs e)
         {
+            convertToBitmap();
+
             if (fillmode == false)
             {
                 fillButton.Content = "Ink";
@@ -89,6 +103,7 @@ namespace SilverlightFill
                 fillButton.Content = "Fill";
                 fillmode = false;
             }
+
         }
 
         private void inkCanvas_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
