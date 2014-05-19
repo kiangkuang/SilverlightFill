@@ -185,6 +185,7 @@ namespace SilverlightFill
                     inkCanvas.Strokes.Add(stroke);
 
 
+<<<<<<< HEAD
 
                     for (int i = (int)w.X + 1; i < e.X; i++)
                     {
@@ -202,6 +203,16 @@ namespace SilverlightFill
                         }
 
 
+=======
+                    for (int i = (int)w.X + 1; i < e.X; i++)
+                    {
+                        wb.SetPixel(i, (int)w.Y, replacementColor);
+                        if ((i > 0) && (i <= wb.PixelWidth) && (w.Y + 1 < wb.PixelHeight) && ColorMatch(wb.GetPixel(i, (int)w.Y + 1), targetColor))
+                        {
+                            q.Enqueue(new Point(i, w.Y + 1));
+                        }
+
+>>>>>>> 297979a552dc4a4cdefcd8368b6ddb52664d0aa9
                         if ((i > 0) && (w.Y - 1 >= 0) && ColorMatch(wb.GetPixel(i, (int)w.Y - 1), targetColor))
                         {
                             q.Enqueue(new Point(i, w.Y - 1));
