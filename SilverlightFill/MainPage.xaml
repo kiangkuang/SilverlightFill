@@ -19,17 +19,18 @@
         <sdk:GridSplitter Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Stretch" Background="Gray" ShowsPreview="True" Width="5"/>
 
         <StackPanel Grid.Column="2" Background="White">
-            <Button Click="clear">Clear</Button>
-            <Button Name="fillButton" Click="fill">Fill</Button>
-            <Button Name="dragButton">Drag</Button>
+			<Button Click="clear">Clear</Button>
+			<Button Name="inkButton" Click="ink" FontWeight="Bold">Ink</Button>
+			<Button Name="fillButton" Click="fill">Fill</Button>
+            <Button Name="dragButton" Click="drag">Drag</Button>
             <Grid Margin="0,10,0,5">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="71"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
 
-                <sdk:Label Grid.Column="0">Replacement</sdk:Label>
-                <Rectangle Name="replaceBox" Fill="Red" Height="20" Width="Auto" Stroke="Gray" Grid.Column="1" Margin="4,0"/>
+                <sdk:Label Grid.Column="0">Selected:</sdk:Label>
+                <Rectangle Name="replaceBox" Fill="Black" Height="20" Width="Auto" Stroke="Gray" Grid.Column="1" Margin="4,0"/>
             </Grid>
 
             <Grid>

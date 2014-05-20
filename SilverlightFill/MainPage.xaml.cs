@@ -16,12 +16,10 @@ namespace SilverlightFill
 {
     public partial class MainPage : UserControl
     {
-        private Color selectedColor = Colors.Red;
-        private Boolean fillmode = false;
+        private Color selectedColor = Colors.Black;
         private Stroke newStroke = null;
         private WriteableBitmap wb;
         private StrokeCollection lineList = new StrokeCollection();
-        private Color inkColor = Colors.Black;
 
         private int mode;
         private const int INKMODE = 0;
@@ -47,56 +45,46 @@ namespace SilverlightFill
         {
             replaceBox.Fill = new SolidColorBrush(Colors.Red);
             selectedColor = Colors.Red;
-            inkColor = Colors.Red;
-
         }
         private void buttonOrange(object sender, RoutedEventArgs e)
         {
             replaceBox.Fill = new SolidColorBrush(Colors.Orange);
             selectedColor = Colors.Orange;
-            inkColor = Colors.Orange;
         }
         private void buttonYellow(object sender, RoutedEventArgs e)
         {
             replaceBox.Fill = new SolidColorBrush(Colors.Yellow);
             selectedColor = Colors.Yellow;
-            inkColor = Colors.Yellow;
         }
         private void buttonGreen(object sender, RoutedEventArgs e)
         {
             replaceBox.Fill = new SolidColorBrush(Colors.Green);
             selectedColor = Colors.Green;
-            inkColor = Colors.Green;
         }
         private void buttonBlue(object sender, RoutedEventArgs e)
         {
             replaceBox.Fill = new SolidColorBrush(Colors.Blue);
             selectedColor = Colors.Blue;
-            inkColor = Colors.Blue;
         }
         private void buttonMagenta(object sender, RoutedEventArgs e)
         {
             replaceBox.Fill = new SolidColorBrush(Colors.Magenta);
             selectedColor = Colors.Magenta;
-            inkColor = Colors.Magenta;
         }
         private void buttonPurple(object sender, RoutedEventArgs e)
         {
             replaceBox.Fill = new SolidColorBrush(Colors.Purple);
             selectedColor = Colors.Purple;
-            inkColor = Colors.Purple;
         }
         private void buttonBlack(object sender, RoutedEventArgs e)
         {
             replaceBox.Fill = new SolidColorBrush(Colors.Black);
             selectedColor = Colors.Black;
-            inkColor = Colors.Black;
         }
         private void buttonWhite(object sender, RoutedEventArgs e)
         {
             replaceBox.Fill = new SolidColorBrush(Colors.White);
             selectedColor = Colors.White;
-            inkColor = Colors.White;
         }
 
         private void clear(object sender, RoutedEventArgs e)
@@ -107,75 +95,95 @@ namespace SilverlightFill
             strokeCounter.Content = "Strokes: " + inkCanvas.Strokes.Count;
         }
 
-        private void fill(object sender, RoutedEventArgs e)
-        {
-
-            if (mode == 0)
-            {
-                fillButton.Content = "Ink";
-                mode = 1;
-            }
-            else
-            {
-                fillButton.Content = "Fill";
-                mode = 0;
-            }
-
-        }
+		private void ink(object sender, RoutedEventArgs e)
+		{
+			inkButton.FontWeight = FontWeights.Bold;
+			fillButton.FontWeight = dragButton.FontWeight = FontWeights.Normal;
+			mode = INKMODE;
+		}
+		private void fill(object sender, RoutedEventArgs e)
+		{
+			fillButton.FontWeight = FontWeights.Bold;
+			inkButton.FontWeight = dragButton.FontWeight = FontWeights.Normal;
+			mode = FILLMODE;
+		}
+		private void drag(object sender, RoutedEventArgs e)
+		{
+			dragButton.FontWeight = FontWeights.Bold;
+			inkButton.FontWeight = fillButton.FontWeight = FontWeights.Normal;
+			mode = DRAGMODE;
+		}
 
         private void inkCanvas_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            if (mode == 0)
-            {
-                inkCanvas.CaptureMouse();
-                newStroke = new Stroke();
-                lineList.Add(newStroke);
-                newStroke.DrawingAttributes.Color = inkColor;
-                //newStroke.DrawingAttributes.OutlineColor = Colors.White;
-                newStroke.DrawingAttributes.Height = 5;
-                newStroke.DrawingAttributes.Width = 5;
+			switch (mode)
+			{
+				case INKMODE:
+					inkCanvas.CaptureMouse();
+					newStroke = new Stroke();
+					lineList.Add(newStroke);
+					newStroke.DrawingAttributes.Color = selectedColor;
+					//newStroke.DrawingAttributes.OutlineColor = Colors.White;
+					newStroke.DrawingAttributes.Height = 5;
+					newStroke.DrawingAttributes.Width = 5;
 
-                newStroke.StylusPoints.Add(e.StylusDevice.GetStylusPoints(inkCanvas));
-                inkCanvas.Strokes.Add(newStroke);
-            }
+					newStroke.StylusPoints.Add(e.StylusDevice.GetStylusPoints(inkCanvas));
+					inkCanvas.Strokes.Add(newStroke);
+					break;
+				case FILLMODE:
+					
+					break;
+				case DRAGMODE:
+					
+					break;
+			}
         }
 
         private void inkCanvas_MouseMove(object sender, MouseEventArgs e)
         {
-            if (mode == 0 && newStroke != null)
-            {
-                newStroke.StylusPoints.Add(e.StylusDevice.GetStylusPoints(inkCanvas));
-            }
+			switch (mode)
+			{
+				case INKMODE:
+				    if (newStroke != null)
+					{
+						newStroke.StylusPoints.Add(e.StylusDevice.GetStylusPoints(inkCanvas));
+					}
+					break;
+				case FILLMODE:
+					
+					break;
+				case DRAGMODE:
+					
+					break;
+			}
         }
 
         private void inkCanvas_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
-            switch (mode)
-            {
-                case INKMODE:
-                    newStroke = null;
-                    inkCanvas.ReleaseMouseCapture();
-                    strokeCounter.Content = "Strokes: " + inkCanvas.Strokes.Count;
-                    break;
-
-                case FILLMODE:
-                    convertToBitmap();
-                    // fill method here
-                    Color targetColor = wb.GetPixel((int)e.GetPosition(inkCanvas).X, (int)e.GetPosition(inkCanvas).Y);
+			switch (mode)
+			{
+				case INKMODE:
+					newStroke = null;
+					inkCanvas.ReleaseMouseCapture();
+					strokeCounter.Content = "Strokes: " + inkCanvas.Strokes.Count;
+					break;
+				case FILLMODE:
+					convertToBitmap();
+					// fill method here
+					Color targetColor = wb.GetPixel((int)e.GetPosition(inkCanvas).X, (int)e.GetPosition(inkCanvas).Y);
                 
-                    floodfill(new Point((int)e.GetPosition(inkCanvas).X, (int)e.GetPosition(inkCanvas).Y), targetColor, selectedColor);
+					floodfill(new Point((int)e.GetPosition(inkCanvas).X, (int)e.GetPosition(inkCanvas).Y), targetColor, selectedColor);
 
-                    foreach (Stroke s in lineList)
-                    {
-                        inkCanvas.Strokes.Remove(s);
-                        inkCanvas.Strokes.Add(s);
-                    }
-                    break;
-
-                default:
-                    break;
-            }
-            
+					foreach (Stroke s in lineList)
+					{
+						inkCanvas.Strokes.Remove(s);
+						inkCanvas.Strokes.Add(s);
+					}
+					break;
+				case DRAGMODE:
+					
+					break;
+			}
         }
 
         private void floodfill(Point pt, Color targetColor, Color replacementColor)
