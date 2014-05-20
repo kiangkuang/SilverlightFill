@@ -29,6 +29,7 @@ namespace SilverlightFill
 		private bool dragStart = false;
 		private Point dragStartPos;
 		private Color dragColor;
+		private int dragFillIndex;
 
 		public MainPage()
 		{
@@ -92,6 +93,7 @@ namespace SilverlightFill
 		{
 			inkCanvas.Strokes.Clear();
 			lineList.Clear();
+			fillList.Clear();
 			convertToBitmap();
 			strokeCounter.Content = "Strokes: " + inkCanvas.Strokes.Count;
 		}
@@ -138,6 +140,20 @@ namespace SilverlightFill
 					dragStart = true;
 					dragStartPos = new Point((int)e.GetPosition(inkCanvas).X, (int)e.GetPosition(inkCanvas).Y);
 					dragColor = wb.GetPixel((int)e.GetPosition(inkCanvas).X, (int)e.GetPosition(inkCanvas).Y);
+					//identifying which fill area
+					for (int i = 0; i < fillList.Count; i++) // each fills
+					{
+						if (fillList[i][0].DrawingAttributes.Color == dragColor) {
+							for (int j = 0; j < fillList[i].Count; j++) // each row fill
+							{
+								if (dragStartPos.Y == fillList[i][j].StylusPoints[0].Y && dragStartPos.X > fillList[i][j].StylusPoints[0].X && dragStartPos.X < fillList[i][j].StylusPoints[1].X)
+								{
+									dragFillIndex = i;
+									break;
+								}
+							}
+						}
+					}
 					break;
 			}
 		}
@@ -160,19 +176,15 @@ namespace SilverlightFill
 					{
 						double deltaX = e.GetPosition(inkCanvas).X - dragStartPos.X;
 						double deltaY = e.GetPosition(inkCanvas).Y - dragStartPos.Y;
-						for (int i = 0; i < fillList.Count; i++) // each fills
+						for (int j = 0; j < fillList[dragFillIndex].Count; j++) // each row fill
 						{
-							if (fillList[i][0].DrawingAttributes.Color == dragColor)
-								for (int j = 0; j < fillList[i].Count; j++) // each row fill
-								{
-									for (int k = 0; k < fillList[i][j].StylusPoints.Count; k++) // each row fill cords
-									{
-										StylusPoint p = fillList[i][j].StylusPoints[k];
-										StylusPoint newp = new StylusPoint(p.X + deltaX, p.Y + deltaY);
-										fillList[i][j].StylusPoints.Remove(p);
-										fillList[i][j].StylusPoints.Insert(k, newp);
-									}
-								}
+							for (int k = 0; k < fillList[dragFillIndex][j].StylusPoints.Count; k++) // each row fill cords
+							{
+								StylusPoint p = fillList[dragFillIndex][j].StylusPoints[k];
+								StylusPoint newp = new StylusPoint(p.X + deltaX, p.Y + deltaY);
+								fillList[dragFillIndex][j].StylusPoints.Remove(p);
+								fillList[dragFillIndex][j].StylusPoints.Insert(k, newp);
+							}
 						}
 						dragStartPos.X = e.GetPosition(inkCanvas).X;
 						dragStartPos.Y = e.GetPosition(inkCanvas).Y;
