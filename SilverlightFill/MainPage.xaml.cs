@@ -214,7 +214,12 @@ namespace SilverlightFill
 
         private static bool ColorMatch(Color a, Color b)
         {
-            return (a.Equals(b));
+            int tolerance = 32;
+            return Math.Abs(a.A - b.A) < tolerance && 
+                   Math.Abs(a.R - b.R) < tolerance &&
+                   Math.Abs(a.G - b.G) < tolerance &&
+                   Math.Abs(a.B - b.B) < tolerance;
+            //return (a.Equals(b));
         }
     }
 }
