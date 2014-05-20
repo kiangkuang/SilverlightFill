@@ -26,7 +26,7 @@ namespace SilverlightFill
 		private const int INKMODE = 0;
 		private const int FILLMODE = 1;
 		private const int DRAGMODE = 2;
-		private bool dragStart = false;
+		private bool dragStarted = false;
 		private Point dragStartPos;
 		private Color dragColor;
 		private int dragFillIndex;
@@ -137,19 +137,22 @@ namespace SilverlightFill
 
 					break;
 				case DRAGMODE:
-					dragStart = true;
+					convertToBitmap();
+					dragStarted = true;
 					dragStartPos = new Point((int)e.GetPosition(inkCanvas).X, (int)e.GetPosition(inkCanvas).Y);
 					dragColor = wb.GetPixel((int)e.GetPosition(inkCanvas).X, (int)e.GetPosition(inkCanvas).Y);
+					dragFillIndex = -1;
 					//identifying which fill area
-					for (int i = 0; i < fillList.Count; i++) // each fills
+					bool found = false;
+					for (int i = fillList.Count-1; i >= 0 && found == false; i--) // each fills
 					{
 						if (fillList[i][0].DrawingAttributes.Color == dragColor) {
-							for (int j = 0; j < fillList[i].Count; j++) // each row fill
+							for (int j = 0; j < fillList[i].Count && found == false; j++) // each row fill
 							{
 								if (dragStartPos.Y == fillList[i][j].StylusPoints[0].Y && dragStartPos.X > fillList[i][j].StylusPoints[0].X && dragStartPos.X < fillList[i][j].StylusPoints[1].X)
 								{
 									dragFillIndex = i;
-									break;
+									found = true;
 								}
 							}
 						}
@@ -172,19 +175,17 @@ namespace SilverlightFill
 
 					break;
 				case DRAGMODE:
-					if (dragStart == true)
+					if (dragStarted == true)
 					{
 						double deltaX = e.GetPosition(inkCanvas).X - dragStartPos.X;
 						double deltaY = e.GetPosition(inkCanvas).Y - dragStartPos.Y;
-						for (int j = 0; j < fillList[dragFillIndex].Count; j++) // each row fill
+						
+						for (int i = 0; dragFillIndex != -1 && i < fillList[dragFillIndex].Count; i++) // each row fill
 						{
-							for (int k = 0; k < fillList[dragFillIndex][j].StylusPoints.Count; k++) // each row fill cords
-							{
-								StylusPoint p = fillList[dragFillIndex][j].StylusPoints[k];
-								StylusPoint newp = new StylusPoint(p.X + deltaX, p.Y + deltaY);
-								fillList[dragFillIndex][j].StylusPoints.Remove(p);
-								fillList[dragFillIndex][j].StylusPoints.Insert(k, newp);
-							}
+							StylusPoint a = fillList[dragFillIndex][i].StylusPoints[0];
+							StylusPoint b = fillList[dragFillIndex][i].StylusPoints[1];
+							fillList[dragFillIndex][i].StylusPoints[0] = new StylusPoint(a.X + deltaX, a.Y + deltaY);
+							fillList[dragFillIndex][i].StylusPoints[1] = new StylusPoint(b.X + deltaX, b.Y + deltaY);
 						}
 						dragStartPos.X = e.GetPosition(inkCanvas).X;
 						dragStartPos.Y = e.GetPosition(inkCanvas).Y;
@@ -215,7 +216,7 @@ namespace SilverlightFill
 					}
 					break;
 				case DRAGMODE:
-					dragStart = false;
+					dragStarted = false;
 					convertToBitmap();
 					break;
 			}
