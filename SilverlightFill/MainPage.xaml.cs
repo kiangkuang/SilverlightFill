@@ -21,6 +21,14 @@ namespace SilverlightFill
         private Stroke newStroke = null;
         private WriteableBitmap wb;
         private StrokeCollection lineList = new StrokeCollection();
+        private Color inkColor = Colors.Black;
+
+        private int mode;
+        private const int INKMODE = 0;
+        private const int FILLMODE = 1;
+        private const int DRAGMODE = 2;
+
+
 
         public MainPage()
         {
@@ -39,46 +47,56 @@ namespace SilverlightFill
         {
             replaceBox.Fill = new SolidColorBrush(Colors.Red);
             selectedColor = Colors.Red;
+            inkColor = Colors.Red;
+
         }
         private void buttonOrange(object sender, RoutedEventArgs e)
         {
             replaceBox.Fill = new SolidColorBrush(Colors.Orange);
             selectedColor = Colors.Orange;
+            inkColor = Colors.Orange;
         }
         private void buttonYellow(object sender, RoutedEventArgs e)
         {
             replaceBox.Fill = new SolidColorBrush(Colors.Yellow);
             selectedColor = Colors.Yellow;
+            inkColor = Colors.Yellow;
         }
         private void buttonGreen(object sender, RoutedEventArgs e)
         {
             replaceBox.Fill = new SolidColorBrush(Colors.Green);
             selectedColor = Colors.Green;
+            inkColor = Colors.Green;
         }
         private void buttonBlue(object sender, RoutedEventArgs e)
         {
             replaceBox.Fill = new SolidColorBrush(Colors.Blue);
             selectedColor = Colors.Blue;
+            inkColor = Colors.Blue;
         }
         private void buttonMagenta(object sender, RoutedEventArgs e)
         {
             replaceBox.Fill = new SolidColorBrush(Colors.Magenta);
             selectedColor = Colors.Magenta;
+            inkColor = Colors.Magenta;
         }
         private void buttonPurple(object sender, RoutedEventArgs e)
         {
             replaceBox.Fill = new SolidColorBrush(Colors.Purple);
             selectedColor = Colors.Purple;
+            inkColor = Colors.Purple;
         }
         private void buttonBlack(object sender, RoutedEventArgs e)
         {
             replaceBox.Fill = new SolidColorBrush(Colors.Black);
             selectedColor = Colors.Black;
+            inkColor = Colors.Black;
         }
         private void buttonWhite(object sender, RoutedEventArgs e)
         {
             replaceBox.Fill = new SolidColorBrush(Colors.White);
             selectedColor = Colors.White;
+            inkColor = Colors.White;
         }
 
         private void clear(object sender, RoutedEventArgs e)
@@ -112,7 +130,7 @@ namespace SilverlightFill
                 inkCanvas.CaptureMouse();
                 newStroke = new Stroke();
                 lineList.Add(newStroke);
-                newStroke.DrawingAttributes.Color = Colors.Black;
+                newStroke.DrawingAttributes.Color = inkColor;
                 //newStroke.DrawingAttributes.OutlineColor = Colors.White;
                 newStroke.DrawingAttributes.Height = 5;
                 newStroke.DrawingAttributes.Width = 5;
