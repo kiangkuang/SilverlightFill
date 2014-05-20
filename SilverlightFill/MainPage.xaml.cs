@@ -145,14 +145,19 @@ namespace SilverlightFill
 					//identifying which fill area
 					bool found = false;
 					for (int i = fillList.Count-1; i >= 0 && found == false; i--) // each fills
-					{
-						if (fillList[i][0].DrawingAttributes.Color == dragColor) {
+                    {
+                        System.Diagnostics.Debug.WriteLine("a");
+                        if (fillList[i][0].DrawingAttributes.Color == dragColor)
+                        {
+                            System.Diagnostics.Debug.WriteLine("b");
 							for (int j = 0; j < fillList[i].Count && found == false; j++) // each row fill
-							{
-								if (dragStartPos.Y == fillList[i][j].StylusPoints[0].Y && dragStartPos.X > fillList[i][j].StylusPoints[0].X && dragStartPos.X < fillList[i][j].StylusPoints[1].X)
+                            {
+                                System.Diagnostics.Debug.WriteLine("c");
+								if ((int)dragStartPos.Y == (int)fillList[i][j].StylusPoints[0].Y && dragStartPos.X > fillList[i][j].StylusPoints[0].X && dragStartPos.X < fillList[i][j].StylusPoints[1].X)
 								{
 									dragFillIndex = i;
-									found = true;
+                                    found = true;
+                                    System.Diagnostics.Debug.WriteLine("d");
 								}
 							}
 						}
