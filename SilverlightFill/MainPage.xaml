@@ -7,80 +7,80 @@
     mc:Ignorable="d"
     d:DesignHeight="600" d:DesignWidth="600">
 
-    <Grid x:Name="LayoutRoot" Background="White">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="Auto"/>
-            <ColumnDefinition Width="100"/>
-        </Grid.ColumnDefinitions>
+	<Grid x:Name="LayoutRoot" Background="White">
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="*"/>
+			<ColumnDefinition Width="Auto"/>
+			<ColumnDefinition Width="100"/>
+		</Grid.ColumnDefinitions>
 
-        <InkPresenter Name="inkCanvas" Grid.Column="0" Width="Auto" Height="Auto" Background="Transparent" MouseLeftButtonDown="inkCanvas_MouseLeftButtonDown" MouseMove="inkCanvas_MouseMove" MouseLeftButtonUp="inkCanvas_MouseLeftButtonUp"/>
+		<InkPresenter Name="inkCanvas" Grid.Column="0" Width="Auto" Height="Auto" Background="Transparent" MouseLeftButtonDown="inkCanvas_MouseLeftButtonDown" MouseMove="inkCanvas_MouseMove" MouseLeftButtonUp="inkCanvas_MouseLeftButtonUp"/>
 
-        <sdk:GridSplitter Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Stretch" Background="Gray" ShowsPreview="True" Width="5"/>
+		<sdk:GridSplitter Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Stretch" Background="Gray" ShowsPreview="True" Width="5"/>
 
-        <StackPanel Grid.Column="2" Background="White">
+		<StackPanel Grid.Column="2" Background="White">
 			<Button Click="clear">Clear</Button>
 			<Button Name="inkButton" Click="ink" FontWeight="Bold">Ink</Button>
 			<Button Name="fillButton" Click="fill">Fill</Button>
-            <Button Name="dragButton" Click="drag">Drag</Button>
-            <Grid Margin="0,10,0,5">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="71"/>
-                    <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
+			<Button Name="dragButton" Click="drag">Drag</Button>
+			<Grid Margin="0,10,0,5">
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="71"/>
+					<ColumnDefinition Width="*"/>
+				</Grid.ColumnDefinitions>
 
-                <sdk:Label Grid.Column="0">Selected:</sdk:Label>
-                <Rectangle Name="replaceBox" Fill="Black" Height="20" Width="Auto" Stroke="Gray" Grid.Column="1" Margin="4,0"/>
-            </Grid>
+				<sdk:Label Grid.Column="0">Selected:</sdk:Label>
+				<Rectangle Name="replaceBox" Fill="Black" Height="20" Width="Auto" Stroke="Gray" Grid.Column="1" Margin="4,0"/>
+			</Grid>
 
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
+			<Grid>
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="*"/>
+					<ColumnDefinition Width="*"/>
+					<ColumnDefinition Width="*"/>
+				</Grid.ColumnDefinitions>
 
-                <StackPanel Grid.Column="0">
-                    <Button Height="30" Width="Auto" Click="buttonRed">
-                        <Rectangle Fill="Red" Height="30" Width="500"/>
-                    </Button>
-                    <Button Height="30" Width="Auto" Click="buttonGreen">
-                        <Rectangle Fill="Green" Height="30" Width="500"/>
-                    </Button>
-                    <Button Height="30" Width="Auto" Click="buttonMagenta">
-                        <Rectangle Fill="Magenta" Height="30" Width="500"/>
-                    </Button>
-                </StackPanel>
+				<StackPanel Grid.Column="0">
+					<Button Height="30" Width="Auto" Click="buttonRed">
+						<Rectangle Fill="Red" Height="30" Width="500"/>
+					</Button>
+					<Button Height="30" Width="Auto" Click="buttonGreen">
+						<Rectangle Fill="Green" Height="30" Width="500"/>
+					</Button>
+					<Button Height="30" Width="Auto" Click="buttonMagenta">
+						<Rectangle Fill="Magenta" Height="30" Width="500"/>
+					</Button>
+				</StackPanel>
 
-                <StackPanel Grid.Column="1">
-                    <Button Height="30" Width="Auto" Click="buttonOrange">
-                        <Rectangle Fill="Orange" Height="30" Width="500"/>
-                    </Button>
-                    <Button Height="30" Width="Auto" Click="buttonBlue">
-                        <Rectangle Fill="Blue" Height="30" Width="500"/>
-                    </Button>
-                    <Button Height="30" Width="Auto" Click="buttonBlack">
-                        <Rectangle Fill="Black" Height="30" Width="500"/>
-                    </Button>
-                </StackPanel>
+				<StackPanel Grid.Column="1">
+					<Button Height="30" Width="Auto" Click="buttonOrange">
+						<Rectangle Fill="Orange" Height="30" Width="500"/>
+					</Button>
+					<Button Height="30" Width="Auto" Click="buttonBlue">
+						<Rectangle Fill="Blue" Height="30" Width="500"/>
+					</Button>
+					<Button Height="30" Width="Auto" Click="buttonBlack">
+						<Rectangle Fill="Black" Height="30" Width="500"/>
+					</Button>
+				</StackPanel>
 
-                <StackPanel Grid.Column="2">
-                    <Button Height="30" Width="Auto" Click="buttonYellow">
-                        <Rectangle Fill="Yellow" Height="30" Width="500"/>
-                    </Button>
-                    <Button Height="30" Width="Auto" Click="buttonPurple">
-                        <Rectangle Fill="Purple" Height="30" Width="500"/>
-                    </Button>
-                    <Button Height="30" Width="Auto" Click="buttonWhite">
-                        <Rectangle Fill="White" Height="30" Width="500"/>
-                    </Button>
-                </StackPanel>
-            </Grid>
+				<StackPanel Grid.Column="2">
+					<Button Height="30" Width="Auto" Click="buttonYellow">
+						<Rectangle Fill="Yellow" Height="30" Width="500"/>
+					</Button>
+					<Button Height="30" Width="Auto" Click="buttonPurple">
+						<Rectangle Fill="Purple" Height="30" Width="500"/>
+					</Button>
+					<Button Height="30" Width="Auto" Click="buttonWhite">
+						<Rectangle Fill="White" Height="30" Width="500"/>
+					</Button>
+				</StackPanel>
+			</Grid>
 
-            <sdk:Label  Name="strokeCounter" Margin="0, 10, 0, 0">Strokes: 0</sdk:Label>
+			<sdk:Label  Name="strokeCounter" Margin="0, 10, 0, 0">Strokes: 0</sdk:Label>
 
-        </StackPanel>
+		</StackPanel>
 
 
-    </Grid>
+	</Grid>
 </UserControl>
