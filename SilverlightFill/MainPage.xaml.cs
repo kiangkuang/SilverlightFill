@@ -110,22 +110,22 @@ namespace SilverlightFill
         private void fill(object sender, RoutedEventArgs e)
         {
 
-            if (fillmode == false)
+            if (mode == 0)
             {
                 fillButton.Content = "Ink";
-                fillmode = true;
+                mode = 1;
             }
             else
             {
                 fillButton.Content = "Fill";
-                fillmode = false;
+                mode = 0;
             }
 
         }
 
         private void inkCanvas_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            if (fillmode == false)
+            if (mode == 0)
             {
                 inkCanvas.CaptureMouse();
                 newStroke = new Stroke();
@@ -142,7 +142,7 @@ namespace SilverlightFill
 
         private void inkCanvas_MouseMove(object sender, MouseEventArgs e)
         {
-            if (fillmode == false && newStroke != null)
+            if (mode == 0 && newStroke != null)
             {
                 newStroke.StylusPoints.Add(e.StylusDevice.GetStylusPoints(inkCanvas));
             }
@@ -150,25 +150,30 @@ namespace SilverlightFill
 
         private void inkCanvas_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
-            if (fillmode == false)
+            switch (mode)
             {
-                newStroke = null;
-                inkCanvas.ReleaseMouseCapture();
-                strokeCounter.Content = "Strokes: " + inkCanvas.Strokes.Count;
-            }
-            else
-            {
-                convertToBitmap();
-                // fill method here
-                Color targetColor = wb.GetPixel((int)e.GetPosition(inkCanvas).X, (int)e.GetPosition(inkCanvas).Y);
-                
-                floodfill(new Point((int)e.GetPosition(inkCanvas).X, (int)e.GetPosition(inkCanvas).Y), targetColor, selectedColor);
+                case INKMODE:
+                    newStroke = null;
+                    inkCanvas.ReleaseMouseCapture();
+                    strokeCounter.Content = "Strokes: " + inkCanvas.Strokes.Count;
+                    break;
 
-                foreach (Stroke s in lineList)
-                {
-                    inkCanvas.Strokes.Remove(s);
-                    inkCanvas.Strokes.Add(s);
-                }
+                case FILLMODE:
+                    convertToBitmap();
+                    // fill method here
+                    Color targetColor = wb.GetPixel((int)e.GetPosition(inkCanvas).X, (int)e.GetPosition(inkCanvas).Y);
+                
+                    floodfill(new Point((int)e.GetPosition(inkCanvas).X, (int)e.GetPosition(inkCanvas).Y), targetColor, selectedColor);
+
+                    foreach (Stroke s in lineList)
+                    {
+                        inkCanvas.Strokes.Remove(s);
+                        inkCanvas.Strokes.Add(s);
+                    }
+                    break;
+
+                default:
+                    break;
             }
             
         }
