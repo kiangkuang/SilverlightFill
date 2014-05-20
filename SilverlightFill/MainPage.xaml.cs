@@ -159,7 +159,7 @@ namespace SilverlightFill
         {
             Queue<Point> q = new Queue<Point>();
 
-            if (!ColorMatch(wb.GetPixel((int)pt.X,(int)pt.Y), targetColor))
+            if (!ColorMatch(wb.GetPixel((int)pt.X, (int)pt.Y), targetColor) || ColorMatch(wb.GetPixel((int)pt.X, (int)pt.Y), replacementColor))
                 return;
 
             q.Enqueue(pt);
