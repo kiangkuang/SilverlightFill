@@ -218,6 +218,7 @@ namespace SilverlightFill
 					break;
 				case DRAGMODE:
 					dragStarted = false;
+					dragFillIndex = -1;
 					convertToBitmap();
 					break;
 			}
