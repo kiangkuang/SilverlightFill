@@ -29,6 +29,7 @@ namespace SilverlightFill
 		private Point dragStartPos;
 		private Color dragColor;
 		private int dragFillIndex;
+        private StylusPointCollection targetedStylusPoint = new StylusPointCollection();
 
 		public MainPage()
 		{
@@ -141,7 +142,6 @@ namespace SilverlightFill
 					inkCanvas.CaptureMouse();
 					newStroke = new Stroke();
 					newStroke.DrawingAttributes.Color = selectedColor;
-					//newStroke.DrawingAttributes.OutlineColor = Colors.White;
 					newStroke.DrawingAttributes.Height = 5;
 					newStroke.DrawingAttributes.Width = 5;
 
@@ -152,7 +152,24 @@ namespace SilverlightFill
 
 					break;
 				case DRAGMODE:
-					
+					convertToBitmap();
+
+					dragStarted = true;
+					dragStartPos = new Point(e.GetPosition(inkCanvas).X, e.GetPosition(inkCanvas).Y);
+					dragFillIndex = -1;
+
+					//identifying which fill area
+                    targetedStylusPoint.Add(new StylusPoint(dragStartPos.X, dragStartPos.Y));
+					for (int i = presenterList.Count-1; i >= 0; i--) // each fills
+                    {
+                        if (presenterList[i].Strokes.HitTest(targetedStylusPoint) != null)
+                        {
+                            dragFillIndex = i;
+                            break;
+                        }
+					}
+                    targetedStylusPoint.Clear();
+
 					break;
 			}
 		}
