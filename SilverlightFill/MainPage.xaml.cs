@@ -27,9 +27,12 @@ namespace SilverlightFill
 		private const int DRAGMODE = 2;
 		private bool dragStarted = false;
 		private Point dragStartPos;
-        private Point hitTestPos;
+		private Point hitTestPos;
 		private Color dragColor;
 		private int dragFillIndex;
+
+		private double deltaX;
+		private double deltaY;
 
 		public MainPage()
 		{
@@ -112,7 +115,7 @@ namespace SilverlightFill
 			presenterList.Clear();
 
 			convertToBitmap();
-			strokeCounter.Content = "Strokes: " + inkCanvas.Strokes.Count;
+			strokeCounter.Content = "Fill Layers: " + presenterList.Count;
 		}
 
 		private void ink(object sender, RoutedEventArgs e)
@@ -156,30 +159,24 @@ namespace SilverlightFill
 
 					dragStarted = true;
 					dragStartPos = new Point(e.GetPosition(inkCanvas).X, e.GetPosition(inkCanvas).Y);
-                   
+
 					dragFillIndex = -1;
 
 					//identifying which fill area
-                   
+					for (int i = presenterList.Count - 1; i >= 0; i--)
+					{
+						StylusPointCollection targetedStylusPoint = new StylusPointCollection();
+						hitTestPos = new Point(e.GetPosition(presenterList[i]).X, e.GetPosition(presenterList[i]).Y);
+						targetedStylusPoint.Add(new StylusPoint(hitTestPos.X, hitTestPos.Y));
 
-					for (int i = presenterList.Count-1; i >= 0; i--) // each fills
-                    {
-                        StylusPointCollection targetedStylusPoint = new StylusPointCollection();
-
-                        hitTestPos = new Point(e.GetPosition(presenterList[i]).X, e.GetPosition(presenterList[i]).Y);
-                        targetedStylusPoint.Add(new StylusPoint(hitTestPos.X, hitTestPos.Y));
-
-                        int count = presenterList[i].Strokes.HitTest(targetedStylusPoint).Count;
-                        if (count > 0)
-                        {
-                            dragFillIndex = i;
-                            System.Diagnostics.Debug.WriteLine(i);
-                            count = 0;
-                            break;
-                        }
+						int count = presenterList[i].Strokes.HitTest(targetedStylusPoint).Count;
+						if (count > 0)
+						{
+							dragFillIndex = i;
+							count = 0;
+							break;
+						}
 					}
-                    
-
 					break;
 			}
 		}
@@ -200,11 +197,11 @@ namespace SilverlightFill
 				case DRAGMODE:
 					if (dragStarted == true && dragFillIndex != -1)
 					{
-						double deltaX = e.GetPosition(inkCanvas).X - dragStartPos.X;
-						double deltaY = e.GetPosition(inkCanvas).Y - dragStartPos.Y;
-						
-                        InkPresenter ip = presenterList[dragFillIndex];
-                        ip.Margin = new Thickness(ip.Margin.Left + deltaX, ip.Margin.Top + deltaY, ip.Margin.Right + deltaX, ip.Margin.Bottom + deltaY);
+						deltaX = e.GetPosition(inkCanvas).X - dragStartPos.X;
+						deltaY = e.GetPosition(inkCanvas).Y - dragStartPos.Y;
+
+						InkPresenter ip = presenterList[dragFillIndex];
+						ip.Margin = new Thickness(ip.Margin.Left + deltaX, ip.Margin.Top + deltaY, ip.Margin.Right + deltaX, ip.Margin.Bottom + deltaY);
 
 						dragStartPos.X = e.GetPosition(inkCanvas).X;
 						dragStartPos.Y = e.GetPosition(inkCanvas).Y;
@@ -220,7 +217,6 @@ namespace SilverlightFill
 				case INKMODE:
 					newStroke = null;
 					inkCanvas.ReleaseMouseCapture();
-					strokeCounter.Content = "Strokes: " + inkCanvas.Strokes.Count;
 					break;
 				case FILLMODE:
 					convertToBitmap();
@@ -230,10 +226,28 @@ namespace SilverlightFill
 					LayoutRoot.Children.Add(newPresenter);
 					presenterList.Add(newPresenter);
 					floodfill(new Point((int)e.GetPosition(inkCanvas).X, (int)e.GetPosition(inkCanvas).Y), targetColor, selectedColor, newPresenter);
+
+					strokeCounter.Content = "Fill Layers: " + presenterList.Count;
 					break;
 				case DRAGMODE:
 					dragStarted = false;
-					dragFillIndex = -1;
+					if (dragFillIndex != -1)
+					{
+						InkPresenter tempIP = new InkPresenter();
+						Color replacementColor = presenterList[dragFillIndex].Strokes[0].DrawingAttributes.Color;
+						//redraw
+						for (int i = 0; i < presenterList[dragFillIndex].Strokes.Count; i++)
+						{
+							InkPresenter ip = presenterList[dragFillIndex];
+							ip.Strokes[i].StylusPoints.Add(new StylusPoint(ip.Strokes[i].StylusPoints[0].X + ip.Margin.Left, ip.Strokes[i].StylusPoints[0].Y + ip.Margin.Top));
+							ip.Strokes[i].StylusPoints.Add(new StylusPoint(ip.Strokes[i].StylusPoints[1].X + ip.Margin.Left, ip.Strokes[i].StylusPoints[1].Y + ip.Margin.Top));
+							ip.Strokes[i].StylusPoints.RemoveAt(0);
+							ip.Strokes[i].StylusPoints.RemoveAt(0);
+						}
+
+						presenterList[dragFillIndex].Margin = new Thickness();
+					}
+
 					convertToBitmap();
 					break;
 			}
@@ -288,9 +302,7 @@ namespace SilverlightFill
 						{
 							q.Enqueue(new Point(i, w.Y - 1));
 						}
-
 					}
-
 				}
 			}
 		}
@@ -302,7 +314,6 @@ namespace SilverlightFill
 				   Math.Abs(a.R - b.R) < tolerance &&
 				   Math.Abs(a.G - b.G) < tolerance &&
 				   Math.Abs(a.B - b.B) < tolerance;
-			//return (a.Equals(b));
 		}
 	}
 }
