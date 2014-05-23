@@ -160,10 +160,12 @@ namespace SilverlightFill
 					dragFillIndex = -1;
 
 					//identifying which fill area
-                    StylusPointCollection targetedStylusPoint = new StylusPointCollection();
+                   
 
 					for (int i = presenterList.Count-1; i >= 0; i--) // each fills
                     {
+                        StylusPointCollection targetedStylusPoint = new StylusPointCollection();
+
                         hitTestPos = new Point(e.GetPosition(presenterList[i]).X, e.GetPosition(presenterList[i]).Y);
                         targetedStylusPoint.Add(new StylusPoint(hitTestPos.X, hitTestPos.Y));
 
@@ -171,6 +173,8 @@ namespace SilverlightFill
                         if (count > 0)
                         {
                             dragFillIndex = i;
+                            System.Diagnostics.Debug.WriteLine(i);
+                            count = 0;
                             break;
                         }
 					}
@@ -194,7 +198,7 @@ namespace SilverlightFill
 
 					break;
 				case DRAGMODE:
-					if (dragStarted == true)
+					if (dragStarted == true && dragFillIndex != -1)
 					{
 						double deltaX = e.GetPosition(inkCanvas).X - dragStartPos.X;
 						double deltaY = e.GetPosition(inkCanvas).Y - dragStartPos.Y;
