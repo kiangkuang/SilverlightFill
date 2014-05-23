@@ -29,7 +29,6 @@ namespace SilverlightFill
 		private Point dragStartPos;
 		private Color dragColor;
 		private int dragFillIndex;
-        private StylusPointCollection targetedStylusPoint = new StylusPointCollection();
 
 		public MainPage()
 		{
@@ -159,6 +158,7 @@ namespace SilverlightFill
 					dragFillIndex = -1;
 
 					//identifying which fill area
+                    StylusPointCollection targetedStylusPoint = new StylusPointCollection();
                     targetedStylusPoint.Add(new StylusPoint(dragStartPos.X, dragStartPos.Y));
 					for (int i = presenterList.Count-1; i >= 0; i--) // each fills
                     {
@@ -169,7 +169,7 @@ namespace SilverlightFill
                             break;
                         }
 					}
-                    targetedStylusPoint.Clear();
+                    
 
 					break;
 			}
