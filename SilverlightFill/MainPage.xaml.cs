@@ -162,9 +162,10 @@ namespace SilverlightFill
                     targetedStylusPoint.Add(new StylusPoint(dragStartPos.X, dragStartPos.Y));
 					for (int i = presenterList.Count-1; i >= 0; i--) // each fills
                     {
-                        if (presenterList[i].Strokes.HitTest(targetedStylusPoint) != null)
+                        if (presenterList[i].Strokes.HitTest(targetedStylusPoint).Count > 0)
                         {
                             dragFillIndex = i;
+                            System.Diagnostics.Debug.WriteLine(i);
                             break;
                         }
 					}
