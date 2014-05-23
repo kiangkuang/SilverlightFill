@@ -19,8 +19,7 @@ namespace SilverlightFill
 		private Color selectedColor = Colors.Black;
 		private Stroke newStroke = null;
 		private WriteableBitmap wb;
-		private StrokeCollection lineList = new StrokeCollection();
-		private List<StrokeCollection> fillList = new List<StrokeCollection>();
+		private List<InkPresenter> presenterList = new List<InkPresenter>();
 
 		private int mode;
 		private const int INKMODE = 0;
@@ -38,8 +37,21 @@ namespace SilverlightFill
 
 		private void convertToBitmap()
 		{
+			InkPresenter temp = new InkPresenter();
+			for (int i = 0; i < presenterList.Count; i++)
+			{
+				for (int j = 0; j < presenterList[i].Strokes.Count; j++)
+				{
+					temp.Strokes.Add(presenterList[i].Strokes[j]);
+				}
+			}
+			for (int i = 0; i < inkCanvas.Strokes.Count; i++)
+			{
+				temp.Strokes.Add(inkCanvas.Strokes[i]);
+			}
+
 			wb = new WriteableBitmap((int)inkCanvas.ActualWidth, (int)inkCanvas.ActualHeight);
-			wb.Render(inkCanvas, new TranslateTransform());
+			wb.Render(temp, new TranslateTransform());
 			wb.Invalidate();
 		}
 
@@ -91,9 +103,13 @@ namespace SilverlightFill
 
 		private void clear(object sender, RoutedEventArgs e)
 		{
+			for (int i = 0; i < presenterList.Count; i++)
+			{
+				LayoutRoot.Children.Remove(presenterList[i]);
+			}
 			inkCanvas.Strokes.Clear();
-			lineList.Clear();
-			fillList.Clear();
+			presenterList.Clear();
+
 			convertToBitmap();
 			strokeCounter.Content = "Strokes: " + inkCanvas.Strokes.Count;
 		}
@@ -124,7 +140,6 @@ namespace SilverlightFill
 				case INKMODE:
 					inkCanvas.CaptureMouse();
 					newStroke = new Stroke();
-					lineList.Add(newStroke);
 					newStroke.DrawingAttributes.Color = selectedColor;
 					//newStroke.DrawingAttributes.OutlineColor = Colors.White;
 					newStroke.DrawingAttributes.Height = 5;
@@ -137,27 +152,7 @@ namespace SilverlightFill
 
 					break;
 				case DRAGMODE:
-					convertToBitmap();
-					dragStarted = true;
-					dragStartPos = new Point((int)e.GetPosition(inkCanvas).X, (int)e.GetPosition(inkCanvas).Y);
-					dragColor = wb.GetPixel((int)e.GetPosition(inkCanvas).X, (int)e.GetPosition(inkCanvas).Y);
-					dragFillIndex = -1;
-					//identifying which fill area
-					bool found = false;
-					for (int i = fillList.Count-1; i >= 0 && found == false; i--) // each fills
-                    {
-                        if (fillList[i][0].DrawingAttributes.Color == dragColor)
-                        {
-							for (int j = 0; j < fillList[i].Count && found == false; j++) // each row fill
-                            {
-								if ((int)dragStartPos.Y == (int)fillList[i][j].StylusPoints[0].Y && dragStartPos.X > fillList[i][j].StylusPoints[0].X && dragStartPos.X < fillList[i][j].StylusPoints[1].X)
-								{
-									dragFillIndex = i;
-                                    found = true;
-								}
-							}
-						}
-					}
+					
 					break;
 			}
 		}
@@ -181,13 +176,8 @@ namespace SilverlightFill
 						double deltaX = e.GetPosition(inkCanvas).X - dragStartPos.X;
 						double deltaY = e.GetPosition(inkCanvas).Y - dragStartPos.Y;
 						
-						for (int i = 0; dragFillIndex != -1 && i < fillList[dragFillIndex].Count; i++) // each row fill
-						{
-							StylusPoint a = fillList[dragFillIndex][i].StylusPoints[0];
-							StylusPoint b = fillList[dragFillIndex][i].StylusPoints[1];
-							fillList[dragFillIndex][i].StylusPoints[0] = new StylusPoint(a.X + deltaX, a.Y + deltaY);
-							fillList[dragFillIndex][i].StylusPoints[1] = new StylusPoint(b.X + deltaX, b.Y + deltaY);
-						}
+
+
 						dragStartPos.X = e.GetPosition(inkCanvas).X;
 						dragStartPos.Y = e.GetPosition(inkCanvas).Y;
 					}
@@ -208,13 +198,10 @@ namespace SilverlightFill
 					convertToBitmap();
 					Color targetColor = wb.GetPixel((int)e.GetPosition(inkCanvas).X, (int)e.GetPosition(inkCanvas).Y);
 
-					floodfill(new Point((int)e.GetPosition(inkCanvas).X, (int)e.GetPosition(inkCanvas).Y), targetColor, selectedColor);
-
-					for (int i = 0; i < lineList.Count; i++)
-					{
-						inkCanvas.Strokes.Remove(lineList[i]);
-						inkCanvas.Strokes.Add(lineList[i]);
-					}
+					InkPresenter newPresenter = new InkPresenter();
+					LayoutRoot.Children.Add(newPresenter);
+					presenterList.Add(newPresenter);
+					floodfill(new Point((int)e.GetPosition(inkCanvas).X, (int)e.GetPosition(inkCanvas).Y), targetColor, selectedColor, newPresenter);
 					break;
 				case DRAGMODE:
 					dragStarted = false;
@@ -224,7 +211,7 @@ namespace SilverlightFill
 			}
 		}
 
-		private void floodfill(Point pt, Color targetColor, Color replacementColor)
+		private void floodfill(Point pt, Color targetColor, Color replacementColor, InkPresenter presenter)
 		{
 			Queue<Point> q = new Queue<Point>();
 
@@ -233,7 +220,6 @@ namespace SilverlightFill
 
 			q.Enqueue(pt);
 
-			StrokeCollection fillStrokeList = new StrokeCollection();
 			while (q.Count > 0)
 			{
 				Point n = q.Dequeue();
@@ -260,8 +246,7 @@ namespace SilverlightFill
 					stroke.DrawingAttributes.Height = 4;
 					stroke.DrawingAttributes.Width = 4;
 					stroke.DrawingAttributes.Color = replacementColor;
-					inkCanvas.Strokes.Add(stroke);
-					fillStrokeList.Add(stroke);
+					presenter.Strokes.Add(stroke);
 
 					for (int i = (int)w.X; i <= e.X; i++)
 					{
@@ -280,8 +265,6 @@ namespace SilverlightFill
 
 				}
 			}
-			fillList.Add(fillStrokeList);
-
 		}
 
 		private static bool ColorMatch(Color a, Color b)
