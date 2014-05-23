@@ -27,6 +27,7 @@ namespace SilverlightFill
 		private const int DRAGMODE = 2;
 		private bool dragStarted = false;
 		private Point dragStartPos;
+        private Point hitTestPos;
 		private Color dragColor;
 		private int dragFillIndex;
 
@@ -155,17 +156,21 @@ namespace SilverlightFill
 
 					dragStarted = true;
 					dragStartPos = new Point(e.GetPosition(inkCanvas).X, e.GetPosition(inkCanvas).Y);
+                   
 					dragFillIndex = -1;
 
 					//identifying which fill area
                     StylusPointCollection targetedStylusPoint = new StylusPointCollection();
-                    targetedStylusPoint.Add(new StylusPoint(dragStartPos.X, dragStartPos.Y));
+
 					for (int i = presenterList.Count-1; i >= 0; i--) // each fills
                     {
-                        if (presenterList[i].Strokes.HitTest(targetedStylusPoint).Count > 0)
+                        hitTestPos = new Point(e.GetPosition(presenterList[i]).X, e.GetPosition(presenterList[i]).Y);
+                        targetedStylusPoint.Add(new StylusPoint(hitTestPos.X, hitTestPos.Y));
+
+                        int count = presenterList[i].Strokes.HitTest(targetedStylusPoint).Count;
+                        if (count > 0)
                         {
                             dragFillIndex = i;
-                            System.Diagnostics.Debug.WriteLine(i);
                             break;
                         }
 					}
@@ -194,7 +199,8 @@ namespace SilverlightFill
 						double deltaX = e.GetPosition(inkCanvas).X - dragStartPos.X;
 						double deltaY = e.GetPosition(inkCanvas).Y - dragStartPos.Y;
 						
-
+                        InkPresenter ip = presenterList[dragFillIndex];
+                        ip.Margin = new Thickness(ip.Margin.Left + deltaX, ip.Margin.Top + deltaY, ip.Margin.Right + deltaX, ip.Margin.Bottom + deltaY);
 
 						dragStartPos.X = e.GetPosition(inkCanvas).X;
 						dragStartPos.Y = e.GetPosition(inkCanvas).Y;
