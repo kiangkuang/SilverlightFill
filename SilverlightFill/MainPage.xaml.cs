@@ -26,6 +26,7 @@ namespace SilverlightFill
 		private const int FILLMODE = 1;
 		private const int DRAGMODE = 2;
 		private const int MERGEMODE = 3;
+		private const int SUBTRACTMODE = 4;
 		private bool dragStarted = false;
 		private Point dragStartPos;
 		private Point hitTestPos;
@@ -122,20 +123,33 @@ namespace SilverlightFill
 		private void ink(object sender, RoutedEventArgs e)
 		{
 			inkButton.FontWeight = FontWeights.Bold;
-			mergeButton.FontWeight = fillButton.FontWeight = dragButton.FontWeight = FontWeights.Normal;
+			subtractButton.FontWeight = mergeButton.FontWeight = fillButton.FontWeight = dragButton.FontWeight = FontWeights.Normal;
 			mode = INKMODE;
 		}
 		private void fill(object sender, RoutedEventArgs e)
 		{
 			fillButton.FontWeight = FontWeights.Bold;
-			mergeButton.FontWeight = inkButton.FontWeight = dragButton.FontWeight = FontWeights.Normal;
+			subtractButton.FontWeight = mergeButton.FontWeight = inkButton.FontWeight = dragButton.FontWeight = FontWeights.Normal;
 			mode = FILLMODE;
 		}
 		private void drag(object sender, RoutedEventArgs e)
 		{
 			dragButton.FontWeight = FontWeights.Bold;
-			mergeButton.FontWeight = inkButton.FontWeight = fillButton.FontWeight = FontWeights.Normal;
+			subtractButton.FontWeight = mergeButton.FontWeight = inkButton.FontWeight = fillButton.FontWeight = FontWeights.Normal;
 			mode = DRAGMODE;
+		}
+		private void merge(object sender, RoutedEventArgs e)
+		{
+			mergeButton.FontWeight = FontWeights.Bold;
+			subtractButton.FontWeight = dragButton.FontWeight = inkButton.FontWeight = fillButton.FontWeight = FontWeights.Normal;
+			mode = MERGEMODE;
+		}
+
+		private void subtract(object sender, RoutedEventArgs e)
+		{
+			subtractButton.FontWeight = FontWeights.Bold;
+			mergeButton.FontWeight = dragButton.FontWeight = inkButton.FontWeight = fillButton.FontWeight = FontWeights.Normal;
+			mode = SUBTRACTMODE;
 		}
 
 		private void inkCanvas_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -356,11 +370,6 @@ namespace SilverlightFill
 				   Math.Abs(a.B - b.B) < tolerance;
 		}
 
-		private void merge(object sender, RoutedEventArgs e)
-		{
-			mergeButton.FontWeight = FontWeights.Bold;
-			dragButton.FontWeight = inkButton.FontWeight = fillButton.FontWeight = FontWeights.Normal;
-			mode = MERGEMODE;
-		}
+		
 	}
 }

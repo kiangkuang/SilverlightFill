@@ -25,6 +25,7 @@
 			<Button Name="dragButton" Click="drag">Drag</Button>
 			<TextBlock>Region Tools</TextBlock>
 			<Button Name="mergeButton" Click="merge">Merge</Button>
+			<Button Name="subtractButton" Click="subtract">Subtract</Button>
 			<Grid Margin="0,10,0,5">
 				<Grid.ColumnDefinitions>
 					<ColumnDefinition Width="71"/>
