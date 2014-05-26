@@ -25,6 +25,7 @@ namespace SilverlightFill
 		private const int INKMODE = 0;
 		private const int FILLMODE = 1;
 		private const int DRAGMODE = 2;
+		private const int MERGEMODE = 3;
 		private bool dragStarted = false;
 		private Point dragStartPos;
 		private Point hitTestPos;
@@ -121,19 +122,19 @@ namespace SilverlightFill
 		private void ink(object sender, RoutedEventArgs e)
 		{
 			inkButton.FontWeight = FontWeights.Bold;
-			fillButton.FontWeight = dragButton.FontWeight = FontWeights.Normal;
+			mergeButton.FontWeight = fillButton.FontWeight = dragButton.FontWeight = FontWeights.Normal;
 			mode = INKMODE;
 		}
 		private void fill(object sender, RoutedEventArgs e)
 		{
 			fillButton.FontWeight = FontWeights.Bold;
-			inkButton.FontWeight = dragButton.FontWeight = FontWeights.Normal;
+			mergeButton.FontWeight = inkButton.FontWeight = dragButton.FontWeight = FontWeights.Normal;
 			mode = FILLMODE;
 		}
 		private void drag(object sender, RoutedEventArgs e)
 		{
 			dragButton.FontWeight = FontWeights.Bold;
-			inkButton.FontWeight = fillButton.FontWeight = FontWeights.Normal;
+			mergeButton.FontWeight = inkButton.FontWeight = fillButton.FontWeight = FontWeights.Normal;
 			mode = DRAGMODE;
 		}
 
@@ -178,6 +179,33 @@ namespace SilverlightFill
 						}
 					}
 					break;
+
+				case MERGEMODE:
+					convertToBitmap();
+
+					dragStartPos = new Point(e.GetPosition(inkCanvas).X, e.GetPosition(inkCanvas).Y);
+
+					dragFillIndex = -1;
+					System.Diagnostics.Debug.WriteLine("here");
+					//identifying which fill area
+					for (int i = presenterList.Count - 1; i >= 0; i--)
+					{
+						StylusPointCollection targetedStylusPoint = new StylusPointCollection();
+						hitTestPos = new Point(e.GetPosition(presenterList[i]).X, e.GetPosition(presenterList[i]).Y);
+						targetedStylusPoint.Add(new StylusPoint(hitTestPos.X, hitTestPos.Y));
+
+						int count = presenterList[i].Strokes.HitTest(targetedStylusPoint).Count;
+						if (count > 0)
+						{
+							dragFillIndex = i;
+							System.Diagnostics.Debug.WriteLine(i);
+							count = 0;
+							break;
+						}
+					}
+					break;
+
+
 			}
 		}
 
@@ -212,6 +240,9 @@ namespace SilverlightFill
 
 		private void inkCanvas_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
 		{
+			Color targetColor;
+			InkPresenter newPresenter;
+
 			switch (mode)
 			{
 				case INKMODE:
@@ -220,9 +251,9 @@ namespace SilverlightFill
 					break;
 				case FILLMODE:
 					convertToBitmap();
-					Color targetColor = wb.GetPixel((int)e.GetPosition(inkCanvas).X, (int)e.GetPosition(inkCanvas).Y);
+					targetColor = wb.GetPixel((int)e.GetPosition(inkCanvas).X, (int)e.GetPosition(inkCanvas).Y);
 
-					InkPresenter newPresenter = new InkPresenter();
+					newPresenter = new InkPresenter();
 					LayoutRoot.Children.Add(newPresenter);
 					presenterList.Add(newPresenter);
 					floodfill(new Point((int)e.GetPosition(inkCanvas).X, (int)e.GetPosition(inkCanvas).Y), targetColor, selectedColor, newPresenter);
@@ -249,6 +280,15 @@ namespace SilverlightFill
 					}
 
 					convertToBitmap();
+					break;
+
+				case MERGEMODE:
+					convertToBitmap();
+					targetColor = wb.GetPixel((int)e.GetPosition(inkCanvas).X, (int)e.GetPosition(inkCanvas).Y);
+
+					floodfill(new Point((int)e.GetPosition(presenterList[dragFillIndex]).X, (int)e.GetPosition(presenterList[dragFillIndex]).Y), targetColor, selectedColor, presenterList[dragFillIndex]);
+
+					strokeCounter.Content = "Fill Layers: " + presenterList.Count;
 					break;
 			}
 		}
@@ -314,6 +354,13 @@ namespace SilverlightFill
 				   Math.Abs(a.R - b.R) < tolerance &&
 				   Math.Abs(a.G - b.G) < tolerance &&
 				   Math.Abs(a.B - b.B) < tolerance;
+		}
+
+		private void merge(object sender, RoutedEventArgs e)
+		{
+			mergeButton.FontWeight = FontWeights.Bold;
+			dragButton.FontWeight = inkButton.FontWeight = fillButton.FontWeight = FontWeights.Normal;
+			mode = MERGEMODE;
 		}
 	}
 }

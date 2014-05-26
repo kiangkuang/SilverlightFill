@@ -23,6 +23,8 @@
 			<Button Name="inkButton" Click="ink" FontWeight="Bold">Ink</Button>
 			<Button Name="fillButton" Click="fill">Fill</Button>
 			<Button Name="dragButton" Click="drag">Drag</Button>
+			<TextBlock>Region Tools</TextBlock>
+			<Button Name="mergeButton" Click="merge">Merge</Button>
 			<Grid Margin="0,10,0,5">
 				<Grid.ColumnDefinitions>
 					<ColumnDefinition Width="71"/>
