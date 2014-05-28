@@ -19,12 +19,13 @@ namespace SilverlightFill
 
 		public static void up(MouseButtonEventArgs e, InkPresenter inkCanvas, Color selectedColor)
 		{
-			Common.hitTestLayer(e, inkCanvas);
+			int clickedLayer = Common.hitTestLayer(e, inkCanvas);
 			Common.convertToBitmap(inkCanvas);
 			Color targetColor = Common.getTargetColor(e, inkCanvas);
-
-			Fill.floodFill(new Point((int)e.GetPosition(MainPage.presenterList[Common.clickedLayer]).X, (int)e.GetPosition(MainPage.presenterList[Common.clickedLayer]).Y), targetColor, selectedColor, MainPage.presenterList[Common.clickedLayer]);
-
+			if (clickedLayer != -1)
+			{
+				Fill.floodFill(new Point((int)e.GetPosition(MainPage.presenterList[clickedLayer]).X, (int)e.GetPosition(MainPage.presenterList[clickedLayer]).Y), targetColor, selectedColor, MainPage.presenterList[clickedLayer]);
+			}
 		}
 	}
 }

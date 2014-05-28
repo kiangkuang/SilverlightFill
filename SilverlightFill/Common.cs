@@ -12,7 +12,6 @@ namespace SilverlightFill
 	public class Common
 	{
 		public static WriteableBitmap wb;
-		public static int clickedLayer;
 		public static Point clickedPos;
 
 		public static bool ColorMatch(Color a, Color b)
@@ -49,10 +48,9 @@ namespace SilverlightFill
 			return wb.GetPixel((int)e.GetPosition(inkCanvas).X, (int)e.GetPosition(inkCanvas).Y);
 		}
 
-		public static void hitTestLayer(MouseButtonEventArgs e, InkPresenter inkCanvas)
+		public static int hitTestLayer(MouseButtonEventArgs e, InkPresenter inkCanvas)
 		{
 			clickedPos = new Point(e.GetPosition(inkCanvas).X, e.GetPosition(inkCanvas).Y);
-			clickedLayer = -1;
 
 			for (int i = MainPage.presenterList.Count - 1; i >= 0; i--)
 			{
@@ -62,10 +60,10 @@ namespace SilverlightFill
 
 				if (MainPage.presenterList[i].Strokes.HitTest(targetedStylusPoint).Count > 0)
 				{
-					clickedLayer = i;
-					return;
+					return i;
 				}
 			}
+			return -1;
 		}
 	}
 }

@@ -16,21 +16,22 @@ namespace SilverlightFill
 		private static bool dragStarted = false;
 		private static double deltaX;
 		private static double deltaY;
+		private static int clickedLayer = -1;
 
 		public static void down(MouseButtonEventArgs e, InkPresenter inkCanvas)
 		{
 			dragStarted = true;
-			Common.hitTestLayer(e, inkCanvas);
+			clickedLayer = Common.hitTestLayer(e, inkCanvas);
 		}
 
 		public static void move(MouseEventArgs e, InkPresenter inkCanvas)
 		{
-			if (dragStarted == true && Common.clickedLayer != -1)
+			if (dragStarted == true && clickedLayer != -1)
 			{
 				deltaX = e.GetPosition(inkCanvas).X - Common.clickedPos.X;
 				deltaY = e.GetPosition(inkCanvas).Y - Common.clickedPos.Y;
 
-				InkPresenter ip = MainPage.presenterList[Common.clickedLayer];
+				InkPresenter ip = MainPage.presenterList[clickedLayer];
 				ip.Margin = new Thickness(ip.Margin.Left + deltaX, ip.Margin.Top + deltaY, ip.Margin.Right + deltaX, ip.Margin.Bottom + deltaY);
 
 				Common.clickedPos.X = e.GetPosition(inkCanvas).X;
@@ -41,21 +42,21 @@ namespace SilverlightFill
 		public static void up(MouseButtonEventArgs e)
 		{
 			dragStarted = false;
-			if (Common.clickedLayer != -1)
+			if (clickedLayer != -1)
 			{
 				InkPresenter tempIP = new InkPresenter();
-				Color replacementColor = MainPage.presenterList[Common.clickedLayer].Strokes[0].DrawingAttributes.Color;
+				Color replacementColor = MainPage.presenterList[clickedLayer].Strokes[0].DrawingAttributes.Color;
 				//redraw
-				for (int i = 0; i < MainPage.presenterList[Common.clickedLayer].Strokes.Count; i++)
+				for (int i = 0; i < MainPage.presenterList[clickedLayer].Strokes.Count; i++)
 				{
-					InkPresenter ip = MainPage.presenterList[Common.clickedLayer];
+					InkPresenter ip = MainPage.presenterList[clickedLayer];
 					ip.Strokes[i].StylusPoints.Add(new StylusPoint(ip.Strokes[i].StylusPoints[0].X + ip.Margin.Left, ip.Strokes[i].StylusPoints[0].Y + ip.Margin.Top));
 					ip.Strokes[i].StylusPoints.Add(new StylusPoint(ip.Strokes[i].StylusPoints[1].X + ip.Margin.Left, ip.Strokes[i].StylusPoints[1].Y + ip.Margin.Top));
 					ip.Strokes[i].StylusPoints.RemoveAt(0);
 					ip.Strokes[i].StylusPoints.RemoveAt(0);
 				}
 
-				MainPage.presenterList[Common.clickedLayer].Margin = new Thickness();
+				MainPage.presenterList[clickedLayer].Margin = new Thickness();
 			}
 		}
 	}
