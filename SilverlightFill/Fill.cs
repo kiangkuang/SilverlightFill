@@ -22,20 +22,20 @@ namespace SilverlightFill
 
 		public static void up(MouseButtonEventArgs e, InkPresenter inkCanvas, Grid LayoutRoot, Color selectedColor)
 		{
-			Common.convertToBitmap(inkCanvas);
-			Color targetColor = Common.getTargetColor(e, inkCanvas);
+			WriteableBitmap wb = Common.convertToBitmap(inkCanvas);
+			Color targetColor = Common.getTargetColor(e, inkCanvas, wb);
 
 			InkPresenter newPresenter = new InkPresenter();
 			LayoutRoot.Children.Add(newPresenter);
 			MainPage.presenterList.Add(newPresenter);
-			floodFill(new Point((int)e.GetPosition(inkCanvas).X, (int)e.GetPosition(inkCanvas).Y), targetColor, selectedColor, newPresenter);
+			floodFill(new Point((int)e.GetPosition(inkCanvas).X, (int)e.GetPosition(inkCanvas).Y), targetColor, selectedColor, newPresenter, wb);
 		}
 
-		public static void floodFill(Point pt, Color targetColor, Color replacementColor, InkPresenter presenter)
+		public static void floodFill(Point pt, Color targetColor, Color replacementColor, InkPresenter presenter, WriteableBitmap wb)
 		{
 			Queue<Point> q = new Queue<Point>();
 
-			if (!Common.ColorMatch(Common.wb.GetPixel((int)pt.X, (int)pt.Y), targetColor) || Common.ColorMatch(Common.wb.GetPixel((int)pt.X, (int)pt.Y), replacementColor))
+			if (!Common.ColorMatch(wb.GetPixel((int)pt.X, (int)pt.Y), targetColor) || Common.ColorMatch(wb.GetPixel((int)pt.X, (int)pt.Y), replacementColor))
 			{
 				return;
 			}
@@ -45,16 +45,16 @@ namespace SilverlightFill
 			{
 				Point n = q.Dequeue();
 
-				if (Common.ColorMatch(Common.wb.GetPixel((int)n.X, (int)n.Y), targetColor))
+				if (Common.ColorMatch(wb.GetPixel((int)n.X, (int)n.Y), targetColor))
 				{
 					Point w = new Point(n.X, n.Y);
 					Point e = new Point(n.X, n.Y);
 
-					while ((w.X >= 0) && (w.X < Common.wb.PixelWidth) && Common.ColorMatch(Common.wb.GetPixel((int)w.X, (int)w.Y), targetColor))
+					while ((w.X >= 0) && (w.X < wb.PixelWidth) && Common.ColorMatch(wb.GetPixel((int)w.X, (int)w.Y), targetColor))
 					{
 						w.X--;
 					}
-					while ((e.X >= 0) && (e.X < Common.wb.PixelWidth) && Common.ColorMatch(Common.wb.GetPixel((int)e.X, (int)e.Y), targetColor))
+					while ((e.X >= 0) && (e.X < wb.PixelWidth) && Common.ColorMatch(wb.GetPixel((int)e.X, (int)e.Y), targetColor))
 					{
 						e.X++;
 					}
@@ -70,12 +70,12 @@ namespace SilverlightFill
 
 					for (int i = (int)w.X; i <= e.X; i++)
 					{
-						Common.wb.SetPixel(i, (int)w.Y, replacementColor);
-						if ((i >= 0) && (i < Common.wb.PixelWidth) && (w.Y + 1 >= 0 && w.Y + 1 < Common.wb.PixelHeight) && Common.ColorMatch(Common.wb.GetPixel(i, (int)w.Y + 1), targetColor))
+						wb.SetPixel(i, (int)w.Y, replacementColor);
+						if ((i >= 0) && (i < wb.PixelWidth) && (w.Y + 1 >= 0 && w.Y + 1 < wb.PixelHeight) && Common.ColorMatch(wb.GetPixel(i, (int)w.Y + 1), targetColor))
 						{
 							q.Enqueue(new Point(i, w.Y + 1));
 						}
-						if ((i >= 0) && (i < Common.wb.PixelWidth) && (w.Y - 1 >= 0 && w.Y - 1 < Common.wb.PixelHeight) && Common.ColorMatch(Common.wb.GetPixel(i, (int)w.Y - 1), targetColor))
+						if ((i >= 0) && (i < wb.PixelWidth) && (w.Y - 1 >= 0 && w.Y - 1 < wb.PixelHeight) && Common.ColorMatch(wb.GetPixel(i, (int)w.Y - 1), targetColor))
 						{
 							q.Enqueue(new Point(i, w.Y - 1));
 						}

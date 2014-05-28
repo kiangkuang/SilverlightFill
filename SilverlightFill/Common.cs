@@ -11,7 +11,6 @@ namespace SilverlightFill
 {
 	public class Common
 	{
-		public static WriteableBitmap wb;
 		public static Point clickedPos;
 
 		public static bool ColorMatch(Color a, Color b)
@@ -23,7 +22,7 @@ namespace SilverlightFill
 				   Math.Abs(a.B - b.B) < tolerance;
 		}
 
-		public static void convertToBitmap(InkPresenter inkCanvas)
+		public static WriteableBitmap convertToBitmap(InkPresenter inkCanvas)
 		{
 			InkPresenter temp = new InkPresenter();
 			for (int i = 0; i < MainPage.presenterList.Count; i++)
@@ -38,12 +37,13 @@ namespace SilverlightFill
 				temp.Strokes.Add(inkCanvas.Strokes[i]);
 			}
 
-			wb = new WriteableBitmap((int)inkCanvas.ActualWidth, (int)inkCanvas.ActualHeight);
+			WriteableBitmap wb = new WriteableBitmap((int)inkCanvas.ActualWidth, (int)inkCanvas.ActualHeight);
 			wb.Render(temp, new TranslateTransform());
 			wb.Invalidate();
+			return wb;
 		}
 
-		public static Color getTargetColor(MouseButtonEventArgs e, InkPresenter inkCanvas)
+		public static Color getTargetColor(MouseButtonEventArgs e, InkPresenter inkCanvas, WriteableBitmap wb)
 		{
 			return wb.GetPixel((int)e.GetPosition(inkCanvas).X, (int)e.GetPosition(inkCanvas).Y);
 		}
