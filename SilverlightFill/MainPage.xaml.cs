@@ -147,16 +147,18 @@ namespace SilverlightFill
 					break;
 				case FILLMODE:
 					Fill.up(e, inkCanvas, LayoutRoot, selectedColor);
-					strokeCounter.Content = "Fill Layers: " + presenterList.Count;
 					break;
 				case DRAGMODE:
 					Drag.up(e);
 					break;
 				case MERGEMODE:
 					Merge.up(e, inkCanvas, selectedColor);
-					strokeCounter.Content = "Fill Layers: " + presenterList.Count;
+					break;
+				case SUBTRACTMODE:
+					Subtract.up(e, inkCanvas, LayoutRoot, selectedColor);
 					break;
 			}
+			strokeCounter.Content = "Fill Layers: " + presenterList.Count;
 		}
 	}
 }

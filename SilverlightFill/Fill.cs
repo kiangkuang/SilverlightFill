@@ -47,8 +47,8 @@ namespace SilverlightFill
 
 				if (Common.ColorMatch(wb.GetPixel((int)n.X, (int)n.Y), targetColor))
 				{
-					Point w = new Point(n.X, n.Y);
-					Point e = new Point(n.X, n.Y);
+					Point w = n;
+					Point e = n;
 
 					while ((w.X >= 0) && (w.X < wb.PixelWidth) && Common.ColorMatch(wb.GetPixel((int)w.X, (int)w.Y), targetColor))
 					{

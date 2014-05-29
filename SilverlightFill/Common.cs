@@ -22,6 +22,14 @@ namespace SilverlightFill
 				   Math.Abs(a.B - b.B) < tolerance;
 		}
 
+		public static bool ColorMatch(Color a, Color b, int tolerance)
+		{
+			return Math.Abs(a.A - b.A) < tolerance &&
+				   Math.Abs(a.R - b.R) < tolerance &&
+				   Math.Abs(a.G - b.G) < tolerance &&
+				   Math.Abs(a.B - b.B) < tolerance;
+		}
+
 		public static WriteableBitmap convertToBitmap(InkPresenter inkCanvas)
 		{
 			InkPresenter temp = new InkPresenter();
