@@ -69,15 +69,25 @@ namespace SilverlightFill
 
 		private static void fillLeftRight(InkPresenter inkCanvas, InkPresenter inkPresenter, Color targetColor, int[] upDownLeftRight, int x, int y)
 		{
-			Color replacementColor = Color.FromArgb(0, 0, 0, 0);
+			Color replacementColor = Color.FromArgb(255, 255, 255, 255);
 			wb3 = Common.convertToBitmap(inkCanvas);
 			for (int i = 0; i < wb3.PixelWidth; i++)
 			{
 				for (int j = 0; j < wb3.PixelHeight; j++)
 				{
-					if (wb3.GetPixel(i, j).Equals(replacementColor) && !Common.ColorMatch(wb3.GetPixel(i, j), wb1.GetPixel(i, j)))
+					if (!Common.ColorMatch(wb3.GetPixel(i, j), wb2.GetPixel(i, j)) && !wb1.GetPixel(i, j).Equals(replacementColor))
 					{
-						Fill.floodFill(new Point(i, j), wb3.GetPixel(i, j), targetColor, inkPresenter, wb3);
+						StylusPointCollection targetedStylusPoint = new StylusPointCollection();
+						targetedStylusPoint.Add(new StylusPoint(i + 2, j + 2));
+						targetedStylusPoint.Add(new StylusPoint(i - 2, j + 2));
+						targetedStylusPoint.Add(new StylusPoint(i - 2, j - 2));
+						targetedStylusPoint.Add(new StylusPoint(i + 2, j - 2));
+						targetedStylusPoint.Add(new StylusPoint(i + 2, j + 2));
+						if (inkCanvas.Strokes.HitTest(targetedStylusPoint).Count == 0)
+						{
+							Fill.floodFill(new Point(i, j), wb3.GetPixel(i, j), targetColor, inkPresenter, wb3);
+						}
+						
 					}
 				}
 			}
@@ -86,7 +96,7 @@ namespace SilverlightFill
 
 		public static int[] enclosedArea(Point pt, Color targetColor)
 		{
-			Color replacementColor = Color.FromArgb(0, 0, 0, 0);
+			Color replacementColor = Color.FromArgb(255, 255, 255, 255);
 			int[] upDownLeftRight = new int[] { (int)pt.Y, (int)pt.Y, (int)pt.X, (int)pt.X };
 			Queue<Point> q = new Queue<Point>();
 
@@ -96,7 +106,7 @@ namespace SilverlightFill
 			{
 				Point n = q.Dequeue();
 
-				if (Common.ColorMatch(wb1.GetPixel((int)n.X, (int)n.Y), targetColor))
+				if (wb1.GetPixel((int)n.X, (int)n.Y).Equals(targetColor))
 				{
 					upDownLeftRight[0] = (int)Math.Min(upDownLeftRight[0], n.Y);
 					upDownLeftRight[1] = (int)Math.Max(upDownLeftRight[1], n.Y);
@@ -106,11 +116,11 @@ namespace SilverlightFill
 					Point w = n;
 					Point e = n;
 
-					while ((w.X > 0) && (w.X < wb1.PixelWidth - 1) && Common.ColorMatch(wb1.GetPixel((int)w.X, (int)w.Y), targetColor))
+					while ((w.X > 0) && (w.X < wb1.PixelWidth - 1) && wb1.GetPixel((int)w.X, (int)w.Y).Equals(targetColor))
 					{
 						w.X--;
 					}
-					while ((e.X > 0) && (e.X < wb1.PixelWidth - 1) && Common.ColorMatch(wb1.GetPixel((int)e.X, (int)e.Y), targetColor))
+					while ((e.X > 0) && (e.X < wb1.PixelWidth - 1) && wb1.GetPixel((int)e.X, (int)e.Y).Equals(targetColor))
 					{
 						e.X++;
 					}
@@ -118,11 +128,11 @@ namespace SilverlightFill
 					for (int i = (int)w.X; i <= e.X; i++)
 					{
 						wb1.SetPixel(i, (int)w.Y, replacementColor);
-						if ((i >= 0) && (i < wb1.PixelWidth) && (w.Y + 1 >= 0 && w.Y + 1 < wb1.PixelHeight) && Common.ColorMatch(wb1.GetPixel(i, (int)w.Y + 1), targetColor))
+						if ((i >= 0) && (i < wb1.PixelWidth) && (w.Y + 1 >= 0 && w.Y + 1 < wb1.PixelHeight) && wb1.GetPixel(i, (int)w.Y + 1).Equals(targetColor))
 						{
 							q.Enqueue(new Point(i, w.Y + 1));
 						}
-						if ((i >= 0) && (i < wb1.PixelWidth) && (w.Y - 1 >= 0 && w.Y - 1 < wb1.PixelHeight) && Common.ColorMatch(wb1.GetPixel(i, (int)w.Y - 1), targetColor))
+						if ((i >= 0) && (i < wb1.PixelWidth) && (w.Y - 1 >= 0 && w.Y - 1 < wb1.PixelHeight) && wb1.GetPixel(i, (int)w.Y - 1).Equals(targetColor))
 						{
 							q.Enqueue(new Point(i, w.Y - 1));
 						}
