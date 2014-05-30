@@ -18,6 +18,8 @@ namespace SilverlightFill
 		private const int DRAGMODE = 2;
 		private const int MERGEMODE = 3;
 		private const int SUBTRACTMODE = 4;
+		private const int INTERSECTMODE = 5;
+
 
 		public MainPage()
 		{
@@ -84,32 +86,38 @@ namespace SilverlightFill
 		private void ink(object sender, RoutedEventArgs e)
 		{
 			inkButton.FontWeight = FontWeights.Bold;
-			subtractButton.FontWeight = mergeButton.FontWeight = fillButton.FontWeight = dragButton.FontWeight = FontWeights.Normal;
+			intersectButton.FontWeight = subtractButton.FontWeight = mergeButton.FontWeight = fillButton.FontWeight = dragButton.FontWeight = FontWeights.Normal;
 			mode = INKMODE;
 		}
 		private void fill(object sender, RoutedEventArgs e)
 		{
 			fillButton.FontWeight = FontWeights.Bold;
-			subtractButton.FontWeight = mergeButton.FontWeight = inkButton.FontWeight = dragButton.FontWeight = FontWeights.Normal;
+			intersectButton.FontWeight = subtractButton.FontWeight = mergeButton.FontWeight = inkButton.FontWeight = dragButton.FontWeight = FontWeights.Normal;
 			mode = FILLMODE;
 		}
 		private void drag(object sender, RoutedEventArgs e)
 		{
 			dragButton.FontWeight = FontWeights.Bold;
-			subtractButton.FontWeight = mergeButton.FontWeight = inkButton.FontWeight = fillButton.FontWeight = FontWeights.Normal;
+			intersectButton.FontWeight = subtractButton.FontWeight = mergeButton.FontWeight = inkButton.FontWeight = fillButton.FontWeight = FontWeights.Normal;
 			mode = DRAGMODE;
 		}
 		private void merge(object sender, RoutedEventArgs e)
 		{
 			mergeButton.FontWeight = FontWeights.Bold;
-			subtractButton.FontWeight = dragButton.FontWeight = inkButton.FontWeight = fillButton.FontWeight = FontWeights.Normal;
+			intersectButton.FontWeight = subtractButton.FontWeight = dragButton.FontWeight = inkButton.FontWeight = fillButton.FontWeight = FontWeights.Normal;
 			mode = MERGEMODE;
 		}
 		private void subtract(object sender, RoutedEventArgs e)
 		{
 			subtractButton.FontWeight = FontWeights.Bold;
-			mergeButton.FontWeight = dragButton.FontWeight = inkButton.FontWeight = fillButton.FontWeight = FontWeights.Normal;
+			intersectButton.FontWeight = mergeButton.FontWeight = dragButton.FontWeight = inkButton.FontWeight = fillButton.FontWeight = FontWeights.Normal;
 			mode = SUBTRACTMODE;
+		}
+		private void intersect(object sender, RoutedEventArgs e)
+		{
+			intersectButton.FontWeight = FontWeights.Bold;
+			subtractButton.FontWeight = mergeButton.FontWeight = dragButton.FontWeight = inkButton.FontWeight = fillButton.FontWeight = FontWeights.Normal;
+			mode = INTERSECTMODE;
 		}
 
 		private void inkCanvas_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -156,6 +164,9 @@ namespace SilverlightFill
 					break;
 				case SUBTRACTMODE:
 					Subtract.up(e, inkCanvas, LayoutRoot, selectedColor);
+					break;
+				case INTERSECTMODE:
+					Intersect.up(e, inkCanvas, selectedColor);
 					break;
 			}
 			strokeCounter.Content = "Fill Layers: " + presenterList.Count;

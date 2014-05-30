@@ -85,6 +85,7 @@
     <Compile Include="Drag.cs" />
     <Compile Include="Fill.cs" />
     <Compile Include="Ink.cs" />
+    <Compile Include="Intersect.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>

@@ -58,6 +58,7 @@ namespace SilverlightFill
 			{
 				MainPage.presenterList[clickedLayer].Strokes.Remove(del[i]);
 			}
+
 			fillLeftRight(inkCanvas, MainPage.presenterList[clickedLayer], targetColor, upDownLeftRight, (int)e.GetPosition(inkCanvas).X, (int)e.GetPosition(inkCanvas).Y);
 
 			if (MainPage.presenterList[clickedLayer].Strokes.Count == 0)
