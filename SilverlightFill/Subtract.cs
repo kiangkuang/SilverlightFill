@@ -70,7 +70,7 @@ namespace SilverlightFill
 
 		private static void fillLeftRight(InkPresenter inkCanvas, InkPresenter inkPresenter, Color targetColor, int[] upDownLeftRight, int x, int y)
 		{
-			Color replacementColor = Color.FromArgb(255, 255, 255, 255);
+			Color replacementColor = Color.FromArgb(255, 200, 200, 200);
 			wb3 = Common.convertToBitmap(inkCanvas);
 			for (int i = 0; i < wb3.PixelWidth; i++)
 			{
@@ -97,7 +97,7 @@ namespace SilverlightFill
 
 		public static int[] enclosedArea(Point pt, Color targetColor)
 		{
-			Color replacementColor = Color.FromArgb(255, 255, 255, 255);
+			Color replacementColor = Color.FromArgb(255, 200, 200, 200);
 			int[] upDownLeftRight = new int[] { (int)pt.Y, (int)pt.Y, (int)pt.X, (int)pt.X };
 			Queue<Point> q = new Queue<Point>();
 
