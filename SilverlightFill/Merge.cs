@@ -25,7 +25,7 @@ namespace SilverlightFill
 			Color targetColor = Common.getTargetColor(e, inkCanvas, wb);
 			if (clickedLayer != -1)
 			{
-				Fill.floodFill(new Point((int)e.GetPosition(MainPage.presenterList[clickedLayer]).X, (int)e.GetPosition(MainPage.presenterList[clickedLayer]).Y), targetColor, selectedColor, MainPage.presenterList[clickedLayer], wb);
+				//Fill.floodFill(new Point((int)e.GetPosition(MainPage.presenterList[clickedLayer]).X, (int)e.GetPosition(MainPage.presenterList[clickedLayer]).Y), targetColor, selectedColor, MainPage.presenterList[clickedLayer], wb);
 			}
 		}
 	}

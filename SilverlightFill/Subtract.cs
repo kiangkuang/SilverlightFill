@@ -86,7 +86,7 @@ namespace SilverlightFill
 						targetedStylusPoint.Add(new StylusPoint(i + 2, j + 2));
 						if (inkCanvas.Strokes.HitTest(targetedStylusPoint).Count == 0)
 						{
-							Fill.floodFill(new Point(i, j), wb3.GetPixel(i, j), targetColor, inkPresenter, wb3);
+							//Fill.floodFill(new Point(i, j), wb3.GetPixel(i, j), targetColor, inkPresenter, wb3);
 						}
 						
 					}

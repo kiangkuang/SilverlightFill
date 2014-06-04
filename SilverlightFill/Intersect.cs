@@ -33,7 +33,7 @@ namespace SilverlightFill
 				MainPage.presenterList[clickedLayer].Strokes.Clear();
 				wb = Common.convertToBitmap(inkCanvas);
 				Color targetColor = Common.getTargetColor(e, inkCanvas, wb);
-				Fill.floodFill(new Point((int)e.GetPosition(MainPage.presenterList[clickedLayer]).X, (int)e.GetPosition(MainPage.presenterList[clickedLayer]).Y), targetColor, replacementColor, MainPage.presenterList[clickedLayer], wb);
+				//Fill.floodFill(new Point((int)e.GetPosition(MainPage.presenterList[clickedLayer]).X, (int)e.GetPosition(MainPage.presenterList[clickedLayer]).Y), targetColor, replacementColor, MainPage.presenterList[clickedLayer], wb);
 			}
 		}
 	}

@@ -11,6 +11,7 @@ namespace SilverlightFill
 		public static Color selectedColor = Colors.Black;
 		public static Color targetColor;
 		public static List<InkPresenter> presenterList = new List<InkPresenter>();
+		public static List<Image> imageList = new List<Image>();
 
 		private int mode;
 		private const int INKMODE = 0;
@@ -73,15 +74,15 @@ namespace SilverlightFill
 		}
 		private void clear(object sender, RoutedEventArgs e)
 		{
-			for (int i = 0; i < presenterList.Count; i++)
+			for (int i = 0; i < imageList.Count; i++)
 			{
-				LayoutRoot.Children.Remove(presenterList[i]);
+				LayoutRoot.Children.Remove(imageList[i]);
 			}
 			inkCanvas.Strokes.Clear();
-			presenterList.Clear();
+			imageList.Clear();
 
 			Common.convertToBitmap(inkCanvas);
-			strokeCounter.Content = "Fill Layers: " + presenterList.Count;
+			strokeCounter.Content = "Fill Layers: " + imageList.Count;
 		}
 		private void ink(object sender, RoutedEventArgs e)
 		{
@@ -169,7 +170,7 @@ namespace SilverlightFill
 					Intersect.up(e, inkCanvas, selectedColor);
 					break;
 			}
-			strokeCounter.Content = "Fill Layers: " + presenterList.Count;
+			strokeCounter.Content = "Fill Layers: " + imageList.Count;
 		}
 	}
 }

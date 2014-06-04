@@ -22,20 +22,34 @@ namespace SilverlightFill
 
 		public static void up(MouseButtonEventArgs e, InkPresenter inkCanvas, Grid LayoutRoot, Color selectedColor)
 		{
-			WriteableBitmap wb = Common.convertToBitmap(inkCanvas);
-			Color targetColor = Common.getTargetColor(e, inkCanvas, wb);
+			for (int i = 0; i < inkCanvas.Strokes.Count; i++)
+			{
+				inkCanvas.Strokes[i].DrawingAttributes.Height = inkCanvas.Strokes[i].DrawingAttributes.Width = 1;
+			}
 
-			InkPresenter newPresenter = new InkPresenter();
-			LayoutRoot.Children.Add(newPresenter);
-			MainPage.presenterList.Add(newPresenter);
-			floodFill(new Point((int)e.GetPosition(inkCanvas).X, (int)e.GetPosition(inkCanvas).Y), targetColor, selectedColor, newPresenter, wb);
+			WriteableBitmap wb1 = Common.convertToBitmap(inkCanvas);
+			WriteableBitmap wb2 = new WriteableBitmap(wb1.PixelWidth, wb1.PixelHeight);
+			Color targetColor = Common.getTargetColor(e, inkCanvas, wb1);
+
+			floodFill(new Point((int)e.GetPosition(inkCanvas).X, (int)e.GetPosition(inkCanvas).Y), targetColor, selectedColor, wb1, wb2);
+
+			Image img = new Image();
+			img.Source = wb2;
+
+			MainPage.imageList.Add(img);
+			LayoutRoot.Children.Add(img);
+
+			for (int i = 0; i < inkCanvas.Strokes.Count; i++)
+			{
+				inkCanvas.Strokes[i].DrawingAttributes.Height = inkCanvas.Strokes[i].DrawingAttributes.Width = 5;
+			}
 		}
 
-		public static void floodFill(Point pt, Color targetColor, Color replacementColor, InkPresenter presenter, WriteableBitmap wb)
+		public static void floodFill(Point pt, Color targetColor, Color replacementColor, WriteableBitmap wb1, WriteableBitmap wb2)
 		{
 			Queue<Point> q = new Queue<Point>();
 
-			if (!Common.ColorMatch(wb.GetPixel((int)pt.X, (int)pt.Y), targetColor) || Common.ColorMatch(wb.GetPixel((int)pt.X, (int)pt.Y), replacementColor))
+			if (!Common.ColorMatch(wb1.GetPixel((int)pt.X, (int)pt.Y), targetColor) || Common.ColorMatch(wb1.GetPixel((int)pt.X, (int)pt.Y), replacementColor))
 			{
 				return;
 			}
@@ -45,37 +59,31 @@ namespace SilverlightFill
 			{
 				Point n = q.Dequeue();
 
-				if (Common.ColorMatch(wb.GetPixel((int)n.X, (int)n.Y), targetColor))
+				if (Common.ColorMatch(wb1.GetPixel((int)n.X, (int)n.Y), targetColor))
 				{
 					Point w = n;
 					Point e = n;
 
-					while ((w.X >= 0) && (w.X < wb.PixelWidth) && Common.ColorMatch(wb.GetPixel((int)w.X, (int)w.Y), targetColor))
+					while ((w.X >= 0) && (w.X < wb1.PixelWidth) && Common.ColorMatch(wb1.GetPixel((int)w.X, (int)w.Y), targetColor))
 					{
 						w.X--;
 					}
-					while ((e.X >= 0) && (e.X < wb.PixelWidth) && Common.ColorMatch(wb.GetPixel((int)e.X, (int)e.Y), targetColor))
+					while ((e.X >= 0) && (e.X < wb1.PixelWidth) && Common.ColorMatch(wb1.GetPixel((int)e.X, (int)e.Y), targetColor))
 					{
 						e.X++;
 					}
-
-					StylusPointCollection stylusPoints = new StylusPointCollection();
-					stylusPoints.Add(new StylusPoint(++w.X, w.Y));
-					stylusPoints.Add(new StylusPoint(--e.X, w.Y));
-					Stroke stroke = new Stroke(stylusPoints);
-					stroke.DrawingAttributes.Height = 4;
-					stroke.DrawingAttributes.Width = 4;
-					stroke.DrawingAttributes.Color = replacementColor;
-					presenter.Strokes.Add(stroke);
+					w.X++;
+					e.X--;
 
 					for (int i = (int)w.X; i <= e.X; i++)
 					{
-						wb.SetPixel(i, (int)w.Y, replacementColor);
-						if ((i >= 0) && (i < wb.PixelWidth) && (w.Y + 1 >= 0 && w.Y + 1 < wb.PixelHeight) && Common.ColorMatch(wb.GetPixel(i, (int)w.Y + 1), targetColor))
+						wb1.SetPixel(i, (int)w.Y, replacementColor);
+						wb2.SetPixel(i, (int)w.Y, replacementColor);
+						if ((i >= 0) && (i < wb1.PixelWidth) && (w.Y + 1 >= 0 && w.Y + 1 < wb1.PixelHeight) && Common.ColorMatch(wb1.GetPixel(i, (int)w.Y + 1), targetColor))
 						{
 							q.Enqueue(new Point(i, w.Y + 1));
 						}
-						if ((i >= 0) && (i < wb.PixelWidth) && (w.Y - 1 >= 0 && w.Y - 1 < wb.PixelHeight) && Common.ColorMatch(wb.GetPixel(i, (int)w.Y - 1), targetColor))
+						if ((i >= 0) && (i < wb1.PixelWidth) && (w.Y - 1 >= 0 && w.Y - 1 < wb1.PixelHeight) && Common.ColorMatch(wb1.GetPixel(i, (int)w.Y - 1), targetColor))
 						{
 							q.Enqueue(new Point(i, w.Y - 1));
 						}
