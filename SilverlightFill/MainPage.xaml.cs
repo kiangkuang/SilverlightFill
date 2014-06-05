@@ -161,7 +161,7 @@ namespace SilverlightFill
 					Fill.up(e, inkCanvas, LayoutRoot, selectedColor);
 					break;
 				case DRAGMODE:
-					Drag.up(e);
+					Drag.up(e, inkCanvas);
 					break;
 				case MERGEMODE:
 					Merge.up(e, inkCanvas, selectedColor);

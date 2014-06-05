@@ -7,6 +7,7 @@ using System.Windows.Ink;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
+using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
 namespace SilverlightFill
@@ -16,47 +17,68 @@ namespace SilverlightFill
 		private static bool dragStarted = false;
 		private static double deltaX;
 		private static double deltaY;
+		private static Point initialPos;
 		private static int clickedLayer = -1;
+
 
 		public static void down(MouseButtonEventArgs e, InkPresenter inkCanvas)
 		{
 			dragStarted = true;
 			clickedLayer = Common.hitTestLayer(e, inkCanvas);
+			initialPos = e.GetPosition(inkCanvas);
+			
 		}
 
 		public static void move(MouseEventArgs e, InkPresenter inkCanvas)
 		{
 			if (dragStarted == true && clickedLayer != -1)
 			{
-				deltaX = e.GetPosition(inkCanvas).X - Common.clickedPos.X;
-				deltaY = e.GetPosition(inkCanvas).Y - Common.clickedPos.Y;
+				deltaX = e.GetPosition(inkCanvas).X - initialPos.X;
+				deltaY = e.GetPosition(inkCanvas).Y - initialPos.Y;
 
-				InkPresenter ip = MainPage.presenterList[clickedLayer];
-				ip.Margin = new Thickness(ip.Margin.Left + deltaX, ip.Margin.Top + deltaY, ip.Margin.Right + deltaX, ip.Margin.Bottom + deltaY);
+				Image img = MainPage.imageList[clickedLayer];
+				img.Margin = new Thickness(img.Margin.Left + deltaX, img.Margin.Top + deltaY, img.Margin.Right - deltaX, img.Margin.Bottom - deltaY);
 
-				Common.clickedPos.X = e.GetPosition(inkCanvas).X;
-				Common.clickedPos.Y = e.GetPosition(inkCanvas).Y;
+				initialPos = e.GetPosition(inkCanvas);
 			}
 		}
 
-		public static void up(MouseButtonEventArgs e)
+		public static void up(MouseButtonEventArgs e, InkPresenter inkCanvas)
 		{
 			dragStarted = false;
 			if (clickedLayer != -1)
 			{
-				InkPresenter tempIP = new InkPresenter();
-				Color replacementColor = MainPage.presenterList[clickedLayer].Strokes[0].DrawingAttributes.Color;
+				WriteableBitmap tempWb = new WriteableBitmap(MainPage.wbList[clickedLayer]);
+				Image img = MainPage.imageList[clickedLayer];
+
 				//redraw
-				for (int i = 0; i < MainPage.presenterList[clickedLayer].Strokes.Count; i++)
+				int w = MainPage.wbList[clickedLayer].PixelWidth;
+				int h = MainPage.wbList[clickedLayer].PixelHeight;
+
+				double marginW = img.Margin.Left;
+				double MarginH = img.Margin.Top;
+
+				MainPage.wbList[clickedLayer].Clear();
+				for (int i = 0; i < w; i++)
 				{
-					InkPresenter ip = MainPage.presenterList[clickedLayer];
-					ip.Strokes[i].StylusPoints.Add(new StylusPoint(ip.Strokes[i].StylusPoints[0].X + ip.Margin.Left, ip.Strokes[i].StylusPoints[0].Y + ip.Margin.Top));
-					ip.Strokes[i].StylusPoints.Add(new StylusPoint(ip.Strokes[i].StylusPoints[1].X + ip.Margin.Left, ip.Strokes[i].StylusPoints[1].Y + ip.Margin.Top));
-					ip.Strokes[i].StylusPoints.RemoveAt(0);
-					ip.Strokes[i].StylusPoints.RemoveAt(0);
+					for (int j = 0; j < h; j++ )
+					{
+						if (tempWb.GetPixel(i, j) != Color.FromArgb(0, 0, 0, 0))
+						{
+							Color tempPixel = tempWb.GetPixel(i,j);
+
+							MainPage.wbList[clickedLayer].SetPixel(i + (int)img.Margin.Left, j + (int)img.Margin.Top, tempPixel);
+						}
+					}
+					
+
 				}
 
-				MainPage.presenterList[clickedLayer].Margin = new Thickness();
+				MainPage.imageList[clickedLayer].Margin = new Thickness();
+
+
+
+				
 			}
 		}
 	}
