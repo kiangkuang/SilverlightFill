@@ -35,8 +35,10 @@ namespace SilverlightFill
 
 			Image img = new Image();
 			img.Source = wb2;
+			img.Stretch = Stretch.None;
 
 			MainPage.imageList.Add(img);
+			MainPage.wbList.Add(wb2);
 			LayoutRoot.Children.Add(img);
 
 			for (int i = 0; i < inkCanvas.Strokes.Count; i++)

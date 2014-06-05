@@ -3,6 +3,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 
 namespace SilverlightFill
 {
@@ -12,6 +13,7 @@ namespace SilverlightFill
 		public static Color targetColor;
 		public static List<InkPresenter> presenterList = new List<InkPresenter>();
 		public static List<Image> imageList = new List<Image>();
+		public static List<WriteableBitmap> wbList = new List<WriteableBitmap>();
 
 		private int mode;
 		private const int INKMODE = 0;
@@ -80,6 +82,7 @@ namespace SilverlightFill
 			}
 			inkCanvas.Strokes.Clear();
 			imageList.Clear();
+			wbList.Clear();
 
 			Common.convertToBitmap(inkCanvas);
 			strokeCounter.Content = "Fill Layers: " + imageList.Count;

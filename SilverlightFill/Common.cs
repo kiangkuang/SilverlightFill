@@ -58,15 +58,9 @@ namespace SilverlightFill
 
 		public static int hitTestLayer(MouseButtonEventArgs e, InkPresenter inkCanvas)
 		{
-			clickedPos = new Point(e.GetPosition(inkCanvas).X, e.GetPosition(inkCanvas).Y);
-
-			for (int i = MainPage.presenterList.Count - 1; i >= 0; i--)
+			for (int i = MainPage.wbList.Count - 1; i >= 0; i--)
 			{
-				StylusPointCollection targetedStylusPoint = new StylusPointCollection();
-				Point hitTestPos = new Point(e.GetPosition(MainPage.presenterList[i]).X, e.GetPosition(MainPage.presenterList[i]).Y);
-				targetedStylusPoint.Add(new StylusPoint(hitTestPos.X, hitTestPos.Y));
-
-				if (MainPage.presenterList[i].Strokes.HitTest(targetedStylusPoint).Count > 0)
+				if (getTargetColor(e, inkCanvas, MainPage.wbList[i]) != Color.FromArgb(0, 0, 0, 0))
 				{
 					return i;
 				}
