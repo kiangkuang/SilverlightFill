@@ -67,7 +67,12 @@ namespace SilverlightFill
 						{
 							Color tempPixel = tempWb.GetPixel(i,j);
 
-							MainPage.wbList[clickedLayer].SetPixel(i + (int)img.Margin.Left, j + (int)img.Margin.Top, tempPixel);
+							int setX = i + (int)img.Margin.Left;
+							int setY = j + (int)img.Margin.Top;
+							if (setX < w && setX >= 0 && setY < h && setY >= 0) {
+								MainPage.wbList[clickedLayer].SetPixel(setX, setY, tempPixel);
+							}
+							
 						}
 					}
 					
