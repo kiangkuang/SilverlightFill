@@ -11,8 +11,6 @@ namespace SilverlightFill
 {
 	public class Common
 	{
-		public static Point clickedPos;
-
 		public static bool ColorMatch(Color a, Color b)
 		{
 			int tolerance = 32;

@@ -82,6 +82,7 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="Common.cs" />
+    <Compile Include="Delete.cs" />
     <Compile Include="Drag.cs" />
     <Compile Include="Fill.cs" />
     <Compile Include="Ink.cs" />

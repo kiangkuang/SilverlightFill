@@ -46,7 +46,7 @@ namespace SilverlightFill
 			WriteableBitmap wb2 = MainPage.wbList[clickedLayer];
 			Color targetColor = Common.getTargetColor(e, inkCanvas, wb1);
 
-			Fill.floodFill(new Point((int)e.GetPosition(inkCanvas).X, (int)e.GetPosition(inkCanvas).Y), targetColor, Color.FromArgb(0,0,0,0), wb1, wb2);
+			Fill.floodFill(new Point((int)e.GetPosition(inkCanvas).X, (int)e.GetPosition(inkCanvas).Y), targetColor, Color.FromArgb(0, 0, 0, 0), wb1, wb2);
 			MainPage.wbList[clickedLayer] = wb2;
 			MainPage.imageList[clickedLayer].Source = wb2;
 			for (int i = 0; i < inkCanvas.Strokes.Count; i++)
@@ -55,6 +55,6 @@ namespace SilverlightFill
 			}
 		}
 
-		
+
 	}
 }

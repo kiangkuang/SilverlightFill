@@ -26,7 +26,7 @@ namespace SilverlightFill
 			dragStarted = true;
 			clickedLayer = Common.hitTestLayer(e, inkCanvas);
 			initialPos = e.GetPosition(inkCanvas);
-			
+
 		}
 
 		public static void move(MouseEventArgs e, InkPresenter inkCanvas)
@@ -61,21 +61,22 @@ namespace SilverlightFill
 				MainPage.wbList[clickedLayer].Clear();
 				for (int i = 0; i < w; i++)
 				{
-					for (int j = 0; j < h; j++ )
+					for (int j = 0; j < h; j++)
 					{
 						if (tempWb.GetPixel(i, j) != Color.FromArgb(0, 0, 0, 0))
 						{
-							Color tempPixel = tempWb.GetPixel(i,j);
+							Color tempPixel = tempWb.GetPixel(i, j);
 
 							int setX = i + (int)img.Margin.Left;
 							int setY = j + (int)img.Margin.Top;
-							if (setX < w && setX >= 0 && setY < h && setY >= 0) {
+							if (setX < w && setX >= 0 && setY < h && setY >= 0)
+							{
 								MainPage.wbList[clickedLayer].SetPixel(setX, setY, tempPixel);
 							}
-							
+
 						}
 					}
-					
+
 
 				}
 
@@ -83,7 +84,7 @@ namespace SilverlightFill
 
 
 
-				
+
 			}
 		}
 	}

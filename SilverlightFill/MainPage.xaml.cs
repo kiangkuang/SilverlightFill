@@ -10,12 +10,11 @@ namespace SilverlightFill
 	public partial class MainPage : UserControl
 	{
 		public static Color selectedColor = Colors.Black;
-		public static Color targetColor;
-		public static List<InkPresenter> presenterList = new List<InkPresenter>();
 		public static List<Image> imageList = new List<Image>();
 		public static List<WriteableBitmap> wbList = new List<WriteableBitmap>();
 
 		private int mode;
+		private const int DELETEMODE = -1;
 		private const int INKMODE = 0;
 		private const int FILLMODE = 1;
 		private const int DRAGMODE = 2;
@@ -87,40 +86,46 @@ namespace SilverlightFill
 			Common.convertToBitmap(inkCanvas);
 			strokeCounter.Content = "Fill Layers: " + imageList.Count;
 		}
+		private void delete(object sender, RoutedEventArgs e)
+		{
+			deleteButton.FontWeight = FontWeights.Bold;
+			inkButton.FontWeight = intersectButton.FontWeight = subtractButton.FontWeight = mergeButton.FontWeight = fillButton.FontWeight = dragButton.FontWeight = FontWeights.Normal;
+			mode = DELETEMODE;
+		}
 		private void ink(object sender, RoutedEventArgs e)
 		{
 			inkButton.FontWeight = FontWeights.Bold;
-			intersectButton.FontWeight = subtractButton.FontWeight = mergeButton.FontWeight = fillButton.FontWeight = dragButton.FontWeight = FontWeights.Normal;
+			deleteButton.FontWeight = intersectButton.FontWeight = subtractButton.FontWeight = mergeButton.FontWeight = fillButton.FontWeight = dragButton.FontWeight = FontWeights.Normal;
 			mode = INKMODE;
 		}
 		private void fill(object sender, RoutedEventArgs e)
 		{
 			fillButton.FontWeight = FontWeights.Bold;
-			intersectButton.FontWeight = subtractButton.FontWeight = mergeButton.FontWeight = inkButton.FontWeight = dragButton.FontWeight = FontWeights.Normal;
+			deleteButton.FontWeight = intersectButton.FontWeight = subtractButton.FontWeight = mergeButton.FontWeight = inkButton.FontWeight = dragButton.FontWeight = FontWeights.Normal;
 			mode = FILLMODE;
 		}
 		private void drag(object sender, RoutedEventArgs e)
 		{
 			dragButton.FontWeight = FontWeights.Bold;
-			intersectButton.FontWeight = subtractButton.FontWeight = mergeButton.FontWeight = inkButton.FontWeight = fillButton.FontWeight = FontWeights.Normal;
+			deleteButton.FontWeight = intersectButton.FontWeight = subtractButton.FontWeight = mergeButton.FontWeight = inkButton.FontWeight = fillButton.FontWeight = FontWeights.Normal;
 			mode = DRAGMODE;
 		}
 		private void merge(object sender, RoutedEventArgs e)
 		{
 			mergeButton.FontWeight = FontWeights.Bold;
-			intersectButton.FontWeight = subtractButton.FontWeight = dragButton.FontWeight = inkButton.FontWeight = fillButton.FontWeight = FontWeights.Normal;
+			deleteButton.FontWeight = intersectButton.FontWeight = subtractButton.FontWeight = dragButton.FontWeight = inkButton.FontWeight = fillButton.FontWeight = FontWeights.Normal;
 			mode = MERGEMODE;
 		}
 		private void subtract(object sender, RoutedEventArgs e)
 		{
 			subtractButton.FontWeight = FontWeights.Bold;
-			intersectButton.FontWeight = mergeButton.FontWeight = dragButton.FontWeight = inkButton.FontWeight = fillButton.FontWeight = FontWeights.Normal;
+			deleteButton.FontWeight = intersectButton.FontWeight = mergeButton.FontWeight = dragButton.FontWeight = inkButton.FontWeight = fillButton.FontWeight = FontWeights.Normal;
 			mode = SUBTRACTMODE;
 		}
 		private void intersect(object sender, RoutedEventArgs e)
 		{
 			intersectButton.FontWeight = FontWeights.Bold;
-			subtractButton.FontWeight = mergeButton.FontWeight = dragButton.FontWeight = inkButton.FontWeight = fillButton.FontWeight = FontWeights.Normal;
+			deleteButton.FontWeight = subtractButton.FontWeight = mergeButton.FontWeight = dragButton.FontWeight = inkButton.FontWeight = fillButton.FontWeight = FontWeights.Normal;
 			mode = INTERSECTMODE;
 		}
 
@@ -171,6 +176,9 @@ namespace SilverlightFill
 					break;
 				case INTERSECTMODE:
 					Intersect.up(e, inkCanvas, selectedColor, LayoutRoot);
+					break;
+				case DELETEMODE:
+					Delete.up(e, inkCanvas, LayoutRoot);
 					break;
 			}
 			strokeCounter.Content = "Fill Layers: " + imageList.Count;

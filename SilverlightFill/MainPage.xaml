@@ -20,10 +20,11 @@
 
 		<StackPanel Grid.Column="2" Background="White" Canvas.ZIndex="2">
 			<Button Click="clear">Clear</Button>
-			<Button Name="inkButton" Click="ink" FontWeight="Bold">Ink</Button>
+			<Button Name="deleteButton" Click="delete">Delete</Button>
+			<Button Name="inkButton" Click="ink" FontWeight="Bold" Margin="0,10,0,0">Ink</Button>
 			<Button Name="fillButton" Click="fill">Fill</Button>
 			<Button Name="dragButton" Click="drag">Drag</Button>
-			<TextBlock>Region Tools</TextBlock>
+			<TextBlock Margin="0,10,0,5">Region Tools</TextBlock>
 			<Button Name="mergeButton" Click="merge">Merge</Button>
 			<Button Name="subtractButton" Click="subtract">Subtract</Button>
 			<Button Name="intersectButton" Click="intersect">Intersect</Button>
