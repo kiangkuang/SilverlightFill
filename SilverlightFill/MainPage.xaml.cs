@@ -170,7 +170,7 @@ namespace SilverlightFill
 					Subtract.up(e, inkCanvas, LayoutRoot, selectedColor);
 					break;
 				case INTERSECTMODE:
-					Intersect.up(e, inkCanvas, selectedColor);
+					Intersect.up(e, inkCanvas, selectedColor, LayoutRoot);
 					break;
 			}
 			strokeCounter.Content = "Fill Layers: " + imageList.Count;

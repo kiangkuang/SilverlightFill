@@ -22,7 +22,7 @@ namespace SilverlightFill
 
 		}
 
-		public static void up(MouseButtonEventArgs e, InkPresenter inkCanvas, Color selectedColor)
+		public static void up(MouseButtonEventArgs e, InkPresenter inkCanvas, Color selectedColor, Grid LayoutRoot)
 		{
 			int clickedLayer = Common.hitTestLayer(e, inkCanvas);
 			if (clickedLayer == -1)
@@ -30,23 +30,38 @@ namespace SilverlightFill
 				return;
 			}
 
+			int layoutInddex = LayoutRoot.Children.IndexOf(MainPage.imageList[clickedLayer]);
+
 			for (int i = 0; i < inkCanvas.Strokes.Count; i++)
 			{
 				inkCanvas.Strokes[i].DrawingAttributes.Height = inkCanvas.Strokes[i].DrawingAttributes.Width = 1;
 			}
 
 			WriteableBitmap wb1 = Common.convertToBitmap(inkCanvas);
-			Color replacementColor = Common.getTargetColor(e, inkCanvas, wb1);
-
-			MainPage.wbList[clickedLayer].Clear();
-			wb1 = Common.convertToBitmap(inkCanvas);
+			WriteableBitmap wb2 = new WriteableBitmap(wb1.PixelWidth, wb1.PixelHeight);
+			WriteableBitmap wb3 = new WriteableBitmap(wb1.PixelWidth, wb1.PixelHeight);
 			Color targetColor = Common.getTargetColor(e, inkCanvas, wb1);
 
-			WriteableBitmap wb2 = new WriteableBitmap(wb1.PixelWidth, wb1.PixelHeight);
-			Fill.floodFill(new Point((int)e.GetPosition(inkCanvas).X, (int)e.GetPosition(inkCanvas).Y), targetColor, replacementColor, wb1, wb2);
+			int tempR = targetColor.R;
+			if (targetColor.R + 50 >= 240)
+			{
+				tempR += 50;
+			}
+			else
+			{
+				tempR -= 50;
+			}
 
-			MainPage.wbList[clickedLayer] = wb2;
-			MainPage.imageList[clickedLayer].Source = wb2;
+			Color tempColor = Color.FromArgb(255, (byte)tempR, 255, 255);
+
+			Fill.floodFill(new Point((int)e.GetPosition(inkCanvas).X, (int)e.GetPosition(inkCanvas).Y), targetColor, tempColor, wb1, wb2);
+			Fill.floodFill(new Point((int)e.GetPosition(inkCanvas).X, (int)e.GetPosition(inkCanvas).Y), tempColor, targetColor, wb2, wb3);
+			Image img = new Image();
+			img.Source = wb3;
+			img.Stretch = Stretch.None;
+			MainPage.imageList[clickedLayer] = img;
+			MainPage.wbList[clickedLayer] = wb3;
+			LayoutRoot.Children[layoutInddex] = img;
 
 			for (int i = 0; i < inkCanvas.Strokes.Count; i++)
 			{
