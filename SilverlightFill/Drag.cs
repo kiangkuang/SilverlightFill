@@ -55,9 +55,6 @@ namespace SilverlightFill
 				int w = MainPage.wbList[clickedLayer].PixelWidth;
 				int h = MainPage.wbList[clickedLayer].PixelHeight;
 
-				double marginW = img.Margin.Left;
-				double MarginH = img.Margin.Top;
-
 				MainPage.wbList[clickedLayer].Clear();
 				for (int i = 0; i < w; i++)
 				{
