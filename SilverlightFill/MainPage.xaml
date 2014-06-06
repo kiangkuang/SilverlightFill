@@ -23,6 +23,7 @@
 			<Button Name="inkButton" Click="ink" FontWeight="Bold">Ink</Button>
 			<Button Name="fillButton" Click="fill">Fill</Button>
 			<Button Name="dragButton" Click="drag">Drag</Button>
+			<Button Name="deleteButton" Click="delete">Delete</Button>
 			<TextBlock>Region Tools</TextBlock>
 			<Button Name="mergeButton" Click="merge">Merge</Button>
 			<Button Name="subtractButton" Click="subtract">Subtract</Button>
