@@ -30,8 +30,6 @@ namespace SilverlightFill
 				return;
 			}
 
-			int layoutInddex = LayoutRoot.Children.IndexOf(MainPage.imageList[clickedLayer]);
-
 			for (int i = 0; i < inkCanvas.Strokes.Count; i++)
 			{
 				inkCanvas.Strokes[i].DrawingAttributes.Height = inkCanvas.Strokes[i].DrawingAttributes.Width = 1;
@@ -56,12 +54,9 @@ namespace SilverlightFill
 
 			Fill.floodFill(new Point((int)e.GetPosition(inkCanvas).X, (int)e.GetPosition(inkCanvas).Y), targetColor, tempColor, wb1, wb2);
 			Fill.floodFill(new Point((int)e.GetPosition(inkCanvas).X, (int)e.GetPosition(inkCanvas).Y), tempColor, targetColor, wb2, wb3);
-			Image img = new Image();
-			img.Source = wb3;
-			img.Stretch = Stretch.None;
-			MainPage.imageList[clickedLayer] = img;
+
 			MainPage.wbList[clickedLayer] = wb3;
-			LayoutRoot.Children[layoutInddex] = img;
+			MainPage.imageList[clickedLayer].Source = wb3;
 
 			for (int i = 0; i < inkCanvas.Strokes.Count; i++)
 			{
