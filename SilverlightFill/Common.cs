@@ -30,6 +30,26 @@ namespace SilverlightFill
 				   Math.Abs(a.B - b.B) < tolerance;
 		}
 
+		public static Color blendPixel(Color front, Color back)
+		{
+			double fA = front.A / 255.0;
+			double fR = front.R / 255.0;
+			double fG = front.G / 255.0;
+			double fB = front.B / 255.0;
+
+			double bA = back.A / 255.0;
+			double bR = back.R / 255.0;
+			double bG = back.G / 255.0;
+			double bB = back.B / 255.0;
+
+			double rA = 1 - (1 - fA) * (1 - bA);
+			double rR = (fR * fA + bR * bA * (1 - fA)) / rA;
+			double rG = (fG * fA + bG * bA * (1 - fA)) / rA;
+			double rB = (fB * fA + bB * bA * (1 - fA)) / rA;
+
+			return Color.FromArgb((byte)(rA * 255), (byte)(rR * 255), (byte)(rG * 255), (byte)(rB * 255));
+		}
+
 		public static WriteableBitmap convertToBitmap(InkPresenter inkCanvas)
 		{
 			InkPresenter temp = new InkPresenter();
