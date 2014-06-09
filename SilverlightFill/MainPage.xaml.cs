@@ -137,7 +137,7 @@ namespace SilverlightFill
 					Ink.down(e, inkCanvas);
 					break;
 				case DRAGMODE:
-					Drag.down(e, inkCanvas);
+					Drag.down(e, inkCanvas, LayoutRoot);
 					break;
 			}
 		}
@@ -166,7 +166,7 @@ namespace SilverlightFill
 					Fill.up(e, inkCanvas, LayoutRoot, selectedColor);
 					break;
 				case DRAGMODE:
-					Drag.up(e, inkCanvas);
+					Drag.up(e, inkCanvas, LayoutRoot);
 					break;
 				case MERGEMODE:
 					Merge.up(e, inkCanvas, selectedColor);
