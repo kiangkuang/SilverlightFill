@@ -52,13 +52,18 @@ namespace SilverlightFill
 
 				LayoutRoot.Children.Add(ipToMove);
 
-				layerIndex = inkCanvas.Strokes.IndexOf(inkCanvas.Strokes.HitTest(spc)[0]);
-				colorTemp = inkCanvas.Strokes.HitTest(spc)[0].DrawingAttributes.Color;
-
 				// remove ink
-				for (int j = 0; j < hitCount; j++)
+				if (hitCount > 1)
 				{
-					inkCanvas.Strokes.Remove(inkCanvas.Strokes.HitTest(spc)[j]);
+					layerIndex = inkCanvas.Strokes.IndexOf(inkCanvas.Strokes.HitTest(spc)[hitCount-1]);
+					colorTemp = inkCanvas.Strokes.HitTest(spc)[hitCount-1].DrawingAttributes.Color;
+					inkCanvas.Strokes.Remove(inkCanvas.Strokes.HitTest(spc)[hitCount-1]);
+				}
+				else
+				{
+					layerIndex = inkCanvas.Strokes.IndexOf(inkCanvas.Strokes.HitTest(spc)[0]);
+					colorTemp = inkCanvas.Strokes.HitTest(spc)[0].DrawingAttributes.Color;
+					inkCanvas.Strokes.Remove(inkCanvas.Strokes.HitTest(spc)[0]);
 				}
 			}
 
@@ -133,7 +138,6 @@ namespace SilverlightFill
 					{
 						StylusPoint spTemp = new StylusPoint(ipToMove.Strokes[i].StylusPoints[j].X + ipToMove.Margin.Left, ipToMove.Strokes[i].StylusPoints[j].Y + ipToMove.Margin.Top);
 						spcTemp.Add(spTemp);
-						System.Diagnostics.Debug.WriteLine(ipToMove.Strokes[i].StylusPoints[j].X + ipToMove.Margin.Left);
 					}
 
 					Stroke newStroke = new Stroke();
