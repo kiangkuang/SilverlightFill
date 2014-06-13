@@ -81,6 +81,7 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="bezier.cs" />
     <Compile Include="Common.cs" />
     <Compile Include="Delete.cs" />
     <Compile Include="Drag.cs" />

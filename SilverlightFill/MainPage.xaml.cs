@@ -129,6 +129,19 @@ namespace SilverlightFill
 			mode = INTERSECTMODE;
 		}
 
+		private void bezier(object sender, RoutedEventArgs e)
+		{
+			if (bezierButton.Content.Equals("Off"))
+			{
+				bezierButton.Content = "On";
+			}
+			else
+			{
+				bezierButton.Content = "Off";
+			}
+			
+		}
+
 		private void inkCanvas_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
 		{
 			switch (mode)
@@ -184,10 +197,7 @@ namespace SilverlightFill
 			strokeCounter.Content = "Fill Layers: " + imageList.Count;
 		}
 
-		private void bezier(object sender, RoutedEventArgs e)
-		{
-
-		}
+		
 
 	}
 }

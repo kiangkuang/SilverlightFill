@@ -29,7 +29,7 @@
 			<Button Name="subtractButton" Click="subtract">Subtract</Button>
 			<Button Name="intersectButton" Click="intersect">Intersect</Button>
 			<TextBlock Margin="0,10,0,5">Bezier Curve</TextBlock>
-			<Button Name="bezierButton" Click="bezier"></Button>
+			<Button Name="bezierButton" Click="bezier" FontWeight="Bold">Off</Button>
 			<Grid Margin="0,10,0,5">
 				<Grid.ColumnDefinitions>
 					<ColumnDefinition Width="71"/>
