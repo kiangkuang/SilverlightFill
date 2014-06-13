@@ -53,10 +53,9 @@ namespace SilverlightFill
 				LayoutRoot.Children.Add(ipToMove);
 
 				// remove ink
-				
-					layerIndex = inkCanvas.Strokes.IndexOf(inkCanvas.Strokes.HitTest(spc)[hitCount-1]);
-					colorTemp = inkCanvas.Strokes.HitTest(spc)[hitCount-1].DrawingAttributes.Color;
-					inkCanvas.Strokes.Remove(inkCanvas.Strokes.HitTest(spc)[hitCount-1]);
+				layerIndex = inkCanvas.Strokes.IndexOf(inkCanvas.Strokes.HitTest(spc)[hitCount-1]);
+				colorTemp = inkCanvas.Strokes.HitTest(spc)[hitCount-1].DrawingAttributes.Color;
+				inkCanvas.Strokes.Remove(inkCanvas.Strokes.HitTest(spc)[hitCount-1]);
 
 			}
 

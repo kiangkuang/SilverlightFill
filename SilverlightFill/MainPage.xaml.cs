@@ -184,5 +184,10 @@ namespace SilverlightFill
 			strokeCounter.Content = "Fill Layers: " + imageList.Count;
 		}
 
+		private void bezier(object sender, RoutedEventArgs e)
+		{
+
+		}
+
 	}
 }
