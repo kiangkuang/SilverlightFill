@@ -36,16 +36,10 @@ namespace SilverlightFill
 			Image img = new Image();
 			img.Source = wb2;
 			img.Stretch = Stretch.None;
-			img.HorizontalAlignment = HorizontalAlignment.Left;
-
 
 			MainPage.imageList.Add(img);
 			MainPage.wbList.Add(wb2);
 			LayoutRoot.Children.Add(img);
-
-			//increase backuplist
-			Drag.imageBackupList.Add(null);
-			Drag.imageBackupOffSet.Add(new Point());
 
 			for (int i = 0; i < inkCanvas.Strokes.Count; i++)
 			{
