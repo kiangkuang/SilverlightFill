@@ -29,10 +29,10 @@ namespace SilverlightFill
 
 		public static List<WriteableBitmap> imageBackupList = new List<WriteableBitmap>();
 		private static WriteableBitmap imageBackup;
-		private const int LEFT = 0;
-		private const int RIGHT = 1;
-		private const int TOP = 2;
-		private const int BOTTOM = 3;
+		private static double maxLeft;
+		private static double maxRight;
+		private static double maxTop;
+		private static double maxBottom;
 		private static bool flag1 = false;
 		private static bool flag2 = false;
 
@@ -44,7 +44,6 @@ namespace SilverlightFill
 		private static bool outOfBound = false;
 
 		public static List<Point> imageBackupOffSet = new List<Point>();
-		public static List<List<double>> imageMaxOffSet = new List<List<double>>();
 
 
 		public static void down(MouseButtonEventArgs e, InkPresenter inkCanvas, Grid LayoutRoot)
@@ -68,15 +67,12 @@ namespace SilverlightFill
 				imageBackup = new WriteableBitmap((BitmapSource)MainPage.imageList[clickedLayer].Source);
 
 				//Calculate max left, right, top, bottom 
-				//calculateMax(MainPage.imageList[clickedLayer]);
+				calculateMax(MainPage.imageList[clickedLayer]);
 
-				System.Diagnostics.Debug.WriteLine("left image max " + imageMaxOffSet[clickedLayer][LEFT]);
-				System.Diagnostics.Debug.WriteLine(e.GetPosition(inkCanvas).X - imageMaxOffSet[clickedLayer][LEFT]);
-
-				offSetLeft = e.GetPosition(inkCanvas).X - imageMaxOffSet[clickedLayer][LEFT];
-				offSetRight = imageMaxOffSet[clickedLayer][RIGHT] - e.GetPosition(inkCanvas).X;
-				offSetTop = e.GetPosition(inkCanvas).Y - imageMaxOffSet[clickedLayer][TOP];
-				offSetBottom = imageMaxOffSet[clickedLayer][BOTTOM] - e.GetPosition(inkCanvas).Y;
+				offSetLeft = e.GetPosition(inkCanvas).X - maxLeft;
+				offSetRight = maxRight - e.GetPosition(inkCanvas).X;
+				offSetTop = e.GetPosition(inkCanvas).Y - maxTop;
+				offSetBottom = maxBottom - e.GetPosition(inkCanvas).Y;
 
 
 				//if the clickedLayer's image is out of bound
@@ -130,14 +126,8 @@ namespace SilverlightFill
 
 		}
 
-		public static void calculateMax(Image image, MouseButtonEventArgs e, InkPresenter inkCanvas)
+		private static void calculateMax(Image image)
 		{
-			clickedLayer = Common.hitTestLayer(e, inkCanvas);
-
-			if (clickedLayer == -1)
-			{
-				return;
-			}
 
 			WriteableBitmap wb = MainPage.wbList[clickedLayer];
 
@@ -149,8 +139,7 @@ namespace SilverlightFill
 					if (wb.GetPixel(w, h) != Color.FromArgb(0, 0, 0, 0) && !flag1)
 					{
 						flag1 = true;
-						System.Diagnostics.Debug.WriteLine("w " + w);
-						imageMaxOffSet[clickedLayer][LEFT] = w;
+						maxLeft = w;
 					}
 
 					if (wb.GetPixel(w, h) != Color.FromArgb(0,0,0,0) && flag1)
@@ -161,7 +150,7 @@ namespace SilverlightFill
 
 				if (flag1 && !flag2)
 				{
-					imageMaxOffSet[clickedLayer][RIGHT] = w;
+					maxRight = w;
 					break;
 				}
 
@@ -181,7 +170,7 @@ namespace SilverlightFill
 					if (wb.GetPixel(w, h) != Color.FromArgb(0, 0, 0, 0) && !flag1)
 					{
 						flag1 = true;
-						imageMaxOffSet[clickedLayer][TOP] = h;
+						maxTop = h;
 				}	
 
 					if (wb.GetPixel(w, h) != Color.FromArgb(0, 0, 0, 0) && flag1)
@@ -192,7 +181,7 @@ namespace SilverlightFill
 
 				if (flag1 && !flag2)
 				{
-					imageMaxOffSet[clickedLayer][BOTTOM] = h;
+					maxBottom = h;
 					break;
 				}
 
@@ -228,8 +217,6 @@ namespace SilverlightFill
 
 				initialPos = e.GetPosition(inkCanvas);
 			}
-
-			//System.Diagnostics.Debug.WriteLine("pixel from left = " + (e.GetPosition(inkCanvas).X - offSetLeft));
 		}
 
 		public static void up(MouseButtonEventArgs e, InkPresenter inkCanvas, Grid LayoutRoot)
@@ -267,8 +254,6 @@ namespace SilverlightFill
 						}
 					}
 				}
-
-				
 
 				if (outOfBound)
 				{
@@ -343,9 +328,6 @@ namespace SilverlightFill
 			if (clickedLayer != -1)
 			{
 				MainPage.imageList[clickedLayer].Margin = new Thickness();
-
-				//calculate max
-				calculateMax(MainPage.imageList[clickedLayer], e, inkCanvas);
 			}
 			
 

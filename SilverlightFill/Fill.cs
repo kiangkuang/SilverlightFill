@@ -46,14 +46,6 @@ namespace SilverlightFill
 			//increase backuplist
 			Drag.imageBackupList.Add(null);
 			Drag.imageBackupOffSet.Add(new Point());
-			//Calculate max left, right, top, bottom 
-			List<double> newList = new List<double>();
-			newList.Add(-1);
-			newList.Add(-1);
-			newList.Add(-1);
-			newList.Add(-1);
-			Drag.imageMaxOffSet.Add(newList);
-			Drag.calculateMax(img, e, inkCanvas);
 
 			for (int i = 0; i < inkCanvas.Strokes.Count; i++)
 			{
