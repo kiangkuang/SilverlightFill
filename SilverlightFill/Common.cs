@@ -78,5 +78,117 @@ namespace SilverlightFill
 			}
 			return -1;
 		}
+
+
+		public static void checkIfOutOfBound(MouseButtonEventArgs e, InkPresenter inkCanvas, Image img, int clickedLayer, WriteableBitmap imageBackup, double offSetLeft, double offSetRight, double offSetTop, double  offSetBottom, double maxLeft, double maxRight, double maxTop, double maxBottom)
+		{
+			if (e.GetPosition(inkCanvas).X - offSetLeft <= 0 || maxLeft == 0)
+			{
+				System.Diagnostics.Debug.WriteLine("left out");
+				MainPage.imageBackupList.Insert(clickedLayer, imageBackup);
+				MainPage.imageBackupOffSet.Insert(clickedLayer, new Point(img.Margin.Left, img.Margin.Top));
+
+			}
+			else if (e.GetPosition(inkCanvas).X + offSetRight >= MainPage.wbList[clickedLayer].PixelWidth || maxRight == 0)
+			{
+				System.Diagnostics.Debug.WriteLine("right out");
+				MainPage.imageBackupList.Insert(clickedLayer, imageBackup);
+				MainPage.imageBackupOffSet.Insert(clickedLayer, new Point(img.Margin.Left, img.Margin.Top));
+			}
+			else if (e.GetPosition(inkCanvas).Y - offSetTop <= 0 || maxTop == 0)
+			{
+				System.Diagnostics.Debug.WriteLine("top out");
+				MainPage.imageBackupList.Insert(clickedLayer, imageBackup);
+				MainPage.imageBackupOffSet.Insert(clickedLayer, new Point(img.Margin.Left, img.Margin.Top));
+			}
+			else if (e.GetPosition(inkCanvas).Y + offSetBottom >= MainPage.wbList[clickedLayer].PixelHeight || maxBottom == 0)
+			{
+				System.Diagnostics.Debug.WriteLine("bottom out");
+				MainPage.imageBackupList.Insert(clickedLayer, imageBackup);
+				MainPage.imageBackupOffSet.Insert(clickedLayer, new Point(img.Margin.Left, img.Margin.Top));
+			}
+		}
+
+		private static bool flag1 = false;
+		private static bool flag2 = false;
+
+		private const int LEFT = 0;
+		private const int RIGHT = 1;
+		private const int TOP = 2;
+		private const int BOTTOM = 3;
+		public static void calculateMax(Image image, MouseButtonEventArgs e, InkPresenter inkCanvas, int clickedLayer)
+		{
+			clickedLayer = Common.hitTestLayer(e, inkCanvas);
+
+			if (clickedLayer == -1)
+			{
+				return;
+			}
+
+			WriteableBitmap wb = MainPage.wbList[clickedLayer];
+
+			//max left and right
+			for (int w = 0; w < MainPage.wbList[clickedLayer].PixelWidth; w++)
+			{
+				for (int h = 0; h < MainPage.wbList[clickedLayer].PixelHeight; h++)
+				{
+					if (wb.GetPixel(w, h) != Color.FromArgb(0, 0, 0, 0) && !flag1)
+					{
+						flag1 = true;
+						MainPage.imageMaxOffSet[clickedLayer][LEFT] = w;
+					}
+
+					if (wb.GetPixel(w, h) != Color.FromArgb(0, 0, 0, 0) && flag1)
+					{
+						flag2 = true;
+					}
+				}
+
+				if (flag1 && !flag2)
+				{
+					MainPage.imageMaxOffSet[clickedLayer][RIGHT] = w;
+					break;
+				}
+
+
+				flag2 = false;
+			}
+
+
+			flag1 = false;
+			flag2 = false;
+
+			//max top and bottom
+			for (int h = 0; h < MainPage.wbList[clickedLayer].PixelHeight; h++)
+			{
+				for (int w = 0; w < MainPage.wbList[clickedLayer].PixelWidth; w++)
+				{
+					if (wb.GetPixel(w, h) != Color.FromArgb(0, 0, 0, 0) && !flag1)
+					{
+						flag1 = true;
+						MainPage.imageMaxOffSet[clickedLayer][TOP] = h;
+					}
+
+					if (wb.GetPixel(w, h) != Color.FromArgb(0, 0, 0, 0) && flag1)
+					{
+						flag2 = true;
+					}
+				}
+
+				if (flag1 && !flag2)
+				{
+					MainPage.imageMaxOffSet[clickedLayer][BOTTOM] = h;
+					break;
+				}
+
+
+				flag2 = false;
+			}
+
+			flag1 = false;
+			flag2 = false;
+
+		}
+
 	}
 }

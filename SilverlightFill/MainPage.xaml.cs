@@ -22,6 +22,10 @@ namespace SilverlightFill
 		private const int SUBTRACTMODE = 4;
 		private const int INTERSECTMODE = 5;
 
+		public static List<Point> imageBackupOffSet = new List<Point>();
+		public static List<List<double>> imageMaxOffSet = new List<List<double>>();
+		public static List<WriteableBitmap> imageBackupList = new List<WriteableBitmap>();
+
 
 		public MainPage()
 		{

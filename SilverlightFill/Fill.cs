@@ -44,17 +44,16 @@ namespace SilverlightFill
 			LayoutRoot.Children.Add(img);
 
 			//increase backuplist
-			Drag.imageBackupList.Add(null);
-			Drag.imageBackupOffSet.Add(new Point());
+			MainPage.imageBackupList.Add(null);
+			MainPage.imageBackupOffSet.Add(new Point());
 			//Calculate max left, right, top, bottom 
 			List<double> newList = new List<double>();
 			newList.Add(-1);
 			newList.Add(-1);
 			newList.Add(-1);
 			newList.Add(-1);
-			Drag.imageMaxOffSet.Add(newList);
-			Drag.calculateMax(img, e, inkCanvas);
-
+			MainPage.imageMaxOffSet.Add(newList);
+			Common.calculateMax(img, e, inkCanvas, MainPage.imageList.Count-1);
 			for (int i = 0; i < inkCanvas.Strokes.Count; i++)
 			{
 				inkCanvas.Strokes[i].DrawingAttributes.Height = inkCanvas.Strokes[i].DrawingAttributes.Width = 5;
