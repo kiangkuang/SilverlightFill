@@ -85,27 +85,31 @@ namespace SilverlightFill
 			if (e.GetPosition(inkCanvas).X - offSetLeft <= 0 || maxLeft == 0)
 			{
 				System.Diagnostics.Debug.WriteLine("left out");
-				MainPage.imageBackupList.Insert(clickedLayer, imageBackup);
-				MainPage.imageBackupOffSet.Insert(clickedLayer, new Point(img.Margin.Left, img.Margin.Top));
+				MainPage.imageBackupList[clickedLayer] = imageBackup;
+				Point newPoint = new Point(img.Margin.Left, img.Margin.Top);
+				MainPage.imageBackupOffSet[clickedLayer] = newPoint;
 
 			}
 			else if (e.GetPosition(inkCanvas).X + offSetRight >= MainPage.wbList[clickedLayer].PixelWidth || maxRight == 0)
-			{
+			{  
 				System.Diagnostics.Debug.WriteLine("right out");
-				MainPage.imageBackupList.Insert(clickedLayer, imageBackup);
-				MainPage.imageBackupOffSet.Insert(clickedLayer, new Point(img.Margin.Left, img.Margin.Top));
+				MainPage.imageBackupList[clickedLayer] = imageBackup;
+				Point newPoint = new Point(img.Margin.Left, img.Margin.Top);
+				MainPage.imageBackupOffSet[clickedLayer] = newPoint;
 			}
 			else if (e.GetPosition(inkCanvas).Y - offSetTop <= 0 || maxTop == 0)
-			{
+			{    
 				System.Diagnostics.Debug.WriteLine("top out");
-				MainPage.imageBackupList.Insert(clickedLayer, imageBackup);
-				MainPage.imageBackupOffSet.Insert(clickedLayer, new Point(img.Margin.Left, img.Margin.Top));
+				MainPage.imageBackupList[clickedLayer] = imageBackup;
+				Point newPoint = new Point(img.Margin.Left, img.Margin.Top);
+				MainPage.imageBackupOffSet[clickedLayer] = newPoint;
 			}
 			else if (e.GetPosition(inkCanvas).Y + offSetBottom >= MainPage.wbList[clickedLayer].PixelHeight || maxBottom == 0)
 			{
 				System.Diagnostics.Debug.WriteLine("bottom out");
-				MainPage.imageBackupList.Insert(clickedLayer, imageBackup);
-				MainPage.imageBackupOffSet.Insert(clickedLayer, new Point(img.Margin.Left, img.Margin.Top));
+				MainPage.imageBackupList[clickedLayer] = imageBackup;
+				Point newPoint = new Point(img.Margin.Left, img.Margin.Top);
+				MainPage.imageBackupOffSet[clickedLayer] = newPoint;
 			}
 		}
 

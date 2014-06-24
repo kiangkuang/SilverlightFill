@@ -59,24 +59,25 @@ namespace SilverlightFill
 			hitCount = inkCanvas.Strokes.HitTest(spc).Count;
 
 			System.Diagnostics.Debug.WriteLine("layer " + clickedLayer);
-			System.Diagnostics.Debug.WriteLine("maxLeft " + MainPage.imageMaxOffSet[clickedLayer][LEFT]);
 
 
 			if (clickedLayer != -1)
 			{
 
 				//Calculate max left, right, top, bottom 
-				offSetLeft = e.GetPosition(inkCanvas).X - MainPage.imageMaxOffSet[clickedLayer][LEFT];
+				offSetLeft = e.GetPosition(inkCanvas).X - MainPage.imageMaxOffSet[clickedLayer][LEFT]; 
 				offSetRight = MainPage.imageMaxOffSet[clickedLayer][RIGHT] - e.GetPosition(inkCanvas).X;
 				offSetTop = e.GetPosition(inkCanvas).Y - MainPage.imageMaxOffSet[clickedLayer][TOP];
 				offSetBottom = MainPage.imageMaxOffSet[clickedLayer][BOTTOM] - e.GetPosition(inkCanvas).Y;
 
+				System.Diagnostics.Debug.WriteLine("maxLeft " + MainPage.imageMaxOffSet[clickedLayer][LEFT]);
+				System.Diagnostics.Debug.WriteLine("offSetLeft " + offSetLeft);
 
 				//if the clickedLayer's image is out of bound
 				if (clickedLayer != -1 && MainPage.imageBackupList[clickedLayer] != null)
 				{
 					outOfBound = true;
-					
+					System.Diagnostics.Debug.WriteLine("OOB");
 					//backup image
 					imageBackup = MainPage.imageBackupList[clickedLayer].Clone();
 					
@@ -92,6 +93,7 @@ namespace SilverlightFill
 					LayoutRoot.Children.Insert(count, img);
 					MainPage.imageList[clickedLayer] = img;
 
+					//displace the img to the original position
 					img.Margin = new Thickness(MainPage.imageBackupOffSet[clickedLayer].X, MainPage.imageBackupOffSet[clickedLayer].Y, -MainPage.imageBackupOffSet[clickedLayer].X, -MainPage.imageBackupOffSet[clickedLayer].Y);
 
 				}
@@ -203,14 +205,10 @@ namespace SilverlightFill
 					MainPage.imageBackupList[clickedLayer] = null;
 				}
 
-				System.Diagnostics.Debug.WriteLine("offSetLeft " + offSetLeft);
-
+				Common.calculateMax(img, e, inkCanvas, clickedLayer);
 				Common.checkIfOutOfBound(e, inkCanvas, img, clickedLayer, imageBackup, offSetLeft, offSetRight, offSetTop, offSetBottom, MainPage.imageMaxOffSet[clickedLayer][LEFT], MainPage.imageMaxOffSet[clickedLayer][RIGHT], MainPage.imageMaxOffSet[clickedLayer][TOP], MainPage.imageMaxOffSet[clickedLayer][BOTTOM]);
 
-				
 
-			
-				
 			}
 			else if (inkClicked)
 			{
