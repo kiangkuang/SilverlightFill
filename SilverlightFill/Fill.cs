@@ -10,6 +10,10 @@ namespace SilverlightFill
 {
 	public class Fill
 	{
+		private static double maxLeft;
+		private static double maxRight;
+		private static double maxTop;
+		private static double maxBottom;
 		public static void down(MouseButtonEventArgs e)
 		{
 
@@ -48,12 +52,12 @@ namespace SilverlightFill
 			MainPage.imageBackupOffSet.Add(new Point());
 			//Calculate max left, right, top, bottom 
 			List<double> newList = new List<double>();
-			newList.Add(-1);
-			newList.Add(-1);
-			newList.Add(-1);
-			newList.Add(-1);
+			newList.Add(maxLeft);
+			newList.Add(maxRight);
+			newList.Add(maxTop);
+			newList.Add(maxBottom);
 			MainPage.imageMaxOffSet.Add(newList);
-			Common.calculateMax(img, e, inkCanvas, MainPage.imageList.Count-1);
+			//Common.calculateMax(img, e, inkCanvas, MainPage.imageList.Count-1);
 			for (int i = 0; i < inkCanvas.Strokes.Count; i++)
 			{
 				inkCanvas.Strokes[i].DrawingAttributes.Height = inkCanvas.Strokes[i].DrawingAttributes.Width = 5;
@@ -63,6 +67,11 @@ namespace SilverlightFill
 		public static void floodFill(Point pt, Color targetColor, Color replacementColor, WriteableBitmap wb1, WriteableBitmap wb2)
 		{
 			Queue<Point> q = new Queue<Point>();
+
+			maxLeft = wb1.PixelWidth;
+			maxRight = 0;
+			maxTop = wb1.PixelHeight;
+			maxBottom = 0;
 
 			if (!Common.ColorMatch(wb1.GetPixel((int)pt.X, (int)pt.Y), targetColor) || Common.ColorMatch(wb1.GetPixel((int)pt.X, (int)pt.Y), replacementColor))
 			{
@@ -90,16 +99,37 @@ namespace SilverlightFill
 					w.X++;
 					e.X--;
 
+					if (w.X < maxLeft)
+					{
+						maxLeft = w.X;
+					}
+
+					if (e.X > maxRight)
+					{
+						maxRight = e.X;
+					}
+
+
 					for (int i = (int)w.X; i <= e.X; i++)
 					{
 						wb1.SetPixel(i, (int)w.Y, replacementColor);
 						wb2.SetPixel(i, (int)w.Y, replacementColor);
 						if ((i >= 0) && (i < wb1.PixelWidth) && (w.Y + 1 >= 0 && w.Y + 1 < wb1.PixelHeight) && Common.ColorMatch(wb1.GetPixel(i, (int)w.Y + 1), targetColor))
 						{
+							if (w.Y + 1 < maxTop)
+							{
+								maxTop = w.Y + 1;
+							}
+
 							q.Enqueue(new Point(i, w.Y + 1));
 						}
 						if ((i >= 0) && (i < wb1.PixelWidth) && (w.Y - 1 >= 0 && w.Y - 1 < wb1.PixelHeight) && Common.ColorMatch(wb1.GetPixel(i, (int)w.Y - 1), targetColor))
 						{
+							if (w.Y - 1 > maxBottom)
+							{
+								maxBottom = w.Y - 1;
+							}
+
 							q.Enqueue(new Point(i, w.Y - 1));
 						}
 					}

@@ -82,7 +82,8 @@ namespace SilverlightFill
 
 		public static void checkIfOutOfBound(MouseButtonEventArgs e, InkPresenter inkCanvas, Image img, int clickedLayer, WriteableBitmap imageBackup, double offSetLeft, double offSetRight, double offSetTop, double  offSetBottom, double maxLeft, double maxRight, double maxTop, double maxBottom)
 		{
-			if (e.GetPosition(inkCanvas).X - offSetLeft <= 0 || maxLeft == 0)
+			double test = e.GetPosition(inkCanvas).X;
+			if ( test - offSetLeft <= 0 || maxLeft == 0)
 			{
 				System.Diagnostics.Debug.WriteLine("left out");
 				MainPage.imageBackupList[clickedLayer] = imageBackup;
@@ -194,5 +195,17 @@ namespace SilverlightFill
 
 		}
 
+		public static void findNewMax(Image image, MouseButtonEventArgs e, InkPresenter inkCanvas, int clickedLayer, double offSetLeft, double offSetRight, double offSetTop, double offSetBottom, double maxLeft, double maxRight, double maxTop, double maxBottom)
+		{
+			if (maxLeft == 0 || maxRight == 0 || maxTop == 0 || maxBottom == 0)
+			{
+				return;
+			}
+
+			MainPage.imageMaxOffSet[clickedLayer][LEFT] = e.GetPosition(inkCanvas).X - offSetLeft;
+			MainPage.imageMaxOffSet[clickedLayer][RIGHT] = e.GetPosition(inkCanvas).X + offSetRight;
+			MainPage.imageMaxOffSet[clickedLayer][TOP] = e.GetPosition(inkCanvas).Y - offSetTop;
+			MainPage.imageMaxOffSet[clickedLayer][BOTTOM] = e.GetPosition(inkCanvas).Y + offSetBottom;
+		}
 	}
 }

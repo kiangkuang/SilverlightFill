@@ -64,14 +64,15 @@ namespace SilverlightFill
 			if (clickedLayer != -1)
 			{
 
-				//Calculate max left, right, top, bottom 
+				//Calculate offset of left, right, top, bottom 
 				offSetLeft = e.GetPosition(inkCanvas).X - MainPage.imageMaxOffSet[clickedLayer][LEFT]; 
 				offSetRight = MainPage.imageMaxOffSet[clickedLayer][RIGHT] - e.GetPosition(inkCanvas).X;
 				offSetTop = e.GetPosition(inkCanvas).Y - MainPage.imageMaxOffSet[clickedLayer][TOP];
 				offSetBottom = MainPage.imageMaxOffSet[clickedLayer][BOTTOM] - e.GetPosition(inkCanvas).Y;
 
-				System.Diagnostics.Debug.WriteLine("maxLeft " + MainPage.imageMaxOffSet[clickedLayer][LEFT]);
-				System.Diagnostics.Debug.WriteLine("offSetLeft " + offSetLeft);
+				//System.Diagnostics.Debug.WriteLine("maxLeft " + MainPage.imageMaxOffSet[clickedLayer][LEFT]);
+				//System.Diagnostics.Debug.WriteLine("offSetLeft " + offSetLeft);
+				//System.Diagnostics.Debug.WriteLine("offSetTop " + offSetTop);
 
 				//if the clickedLayer's image is out of bound
 				if (clickedLayer != -1 && MainPage.imageBackupList[clickedLayer] != null)
@@ -205,7 +206,10 @@ namespace SilverlightFill
 					MainPage.imageBackupList[clickedLayer] = null;
 				}
 
-				Common.calculateMax(img, e, inkCanvas, clickedLayer);
+				//find the new Max
+
+				Common.findNewMax(img, e, inkCanvas, clickedLayer, offSetLeft, offSetRight, offSetTop, offSetBottom, MainPage.imageMaxOffSet[clickedLayer][LEFT], MainPage.imageMaxOffSet[clickedLayer][RIGHT], MainPage.imageMaxOffSet[clickedLayer][TOP], MainPage.imageMaxOffSet[clickedLayer][BOTTOM]);
+				//Common.calculateMax(img, e, inkCanvas, clickedLayer);
 				Common.checkIfOutOfBound(e, inkCanvas, img, clickedLayer, imageBackup, offSetLeft, offSetRight, offSetTop, offSetBottom, MainPage.imageMaxOffSet[clickedLayer][LEFT], MainPage.imageMaxOffSet[clickedLayer][RIGHT], MainPage.imageMaxOffSet[clickedLayer][TOP], MainPage.imageMaxOffSet[clickedLayer][BOTTOM]);
 
 
@@ -247,7 +251,8 @@ namespace SilverlightFill
 				//calculate max
 				Image img = new Image();
 				img.Source = imageBackup;
-				Common.calculateMax(img, e, inkCanvas, clickedLayer);
+				Common.findNewMax(img, e, inkCanvas, clickedLayer, offSetLeft, offSetRight, offSetTop, offSetBottom, MainPage.imageMaxOffSet[clickedLayer][LEFT], MainPage.imageMaxOffSet[clickedLayer][RIGHT], MainPage.imageMaxOffSet[clickedLayer][TOP], MainPage.imageMaxOffSet[clickedLayer][BOTTOM]);
+				//Common.calculateMax(img, e, inkCanvas, clickedLayer);
 			}
 			
 
