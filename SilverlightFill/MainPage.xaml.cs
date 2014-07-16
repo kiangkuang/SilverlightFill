@@ -219,5 +219,16 @@ namespace SilverlightFill
 			inkCanvas.Strokes.Add(newStroke);
 		}
 
+		private void convert(object sender, RoutedEventArgs e)
+		{
+			long before = DateTime.Now.Ticks;
+
+			Common.convertToBitmap(inkCanvas);
+
+			long after = DateTime.Now.Ticks;
+			TimeSpan elapsedTime = new TimeSpan(after - before);
+			System.Diagnostics.Debug.WriteLine("Convert:	" + elapsedTime.TotalMilliseconds + " milliseconds");
+		}
+
 	}
 }

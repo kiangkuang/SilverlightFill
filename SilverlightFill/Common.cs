@@ -51,7 +51,6 @@ namespace SilverlightFill
 		public static WriteableBitmap convertToBitmap(InkPresenter inkCanvas)
 		{
 			WriteableBitmap wb = new WriteableBitmap((int)inkCanvas.ActualWidth, (int)inkCanvas.ActualHeight);
-			InkPresenter temp = new InkPresenter();
 			for (int i = 0; i < MainPage.imageList.Count; i++)
 			{
 				wb.Render(MainPage.imageList[i], new TranslateTransform());
