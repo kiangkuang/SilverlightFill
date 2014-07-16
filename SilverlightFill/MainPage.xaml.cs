@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Ink;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -201,7 +203,21 @@ namespace SilverlightFill
 			strokeCounter.Content = "Fill Layers: " + imageList.Count;
 		}
 
-		
+		private void draw800600(object sender, RoutedEventArgs e)
+		{
+			Stroke newStroke = new Stroke();
+			newStroke.DrawingAttributes.Color = MainPage.selectedColor;
+			newStroke.DrawingAttributes.Height = 5;
+			newStroke.DrawingAttributes.Width = 5;
+
+			newStroke.StylusPoints.Add(new StylusPoint(0, 0));
+			newStroke.StylusPoints.Add(new StylusPoint(800, 0));
+			newStroke.StylusPoints.Add(new StylusPoint(800, 600));
+			newStroke.StylusPoints.Add(new StylusPoint(0, 600));
+			newStroke.StylusPoints.Add(new StylusPoint(0, 0));
+
+			inkCanvas.Strokes.Add(newStroke);
+		}
 
 	}
 }

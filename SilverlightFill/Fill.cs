@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Ink;
@@ -26,6 +27,8 @@ namespace SilverlightFill
 
 		public static void up(MouseButtonEventArgs e, InkPresenter inkCanvas, Grid LayoutRoot, Color selectedColor)
 		{
+			long before = DateTime.Now.Ticks;
+
 			for (int i = 0; i < inkCanvas.Strokes.Count; i++)
 			{
 				inkCanvas.Strokes[i].DrawingAttributes.Height = inkCanvas.Strokes[i].DrawingAttributes.Width = 1;
@@ -62,6 +65,10 @@ namespace SilverlightFill
 			{
 				inkCanvas.Strokes[i].DrawingAttributes.Height = inkCanvas.Strokes[i].DrawingAttributes.Width = 5;
 			}
+
+			long after = DateTime.Now.Ticks;
+			TimeSpan elapsedTime = new TimeSpan(after - before);
+			System.Diagnostics.Debug.WriteLine("Fill:		" + elapsedTime.TotalMilliseconds + " milliseconds");
 		}
 
 		public static void floodFill(Point pt, Color targetColor, Color replacementColor, WriteableBitmap wb1, WriteableBitmap wb2)
