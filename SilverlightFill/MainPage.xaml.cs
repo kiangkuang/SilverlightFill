@@ -232,8 +232,9 @@ namespace SilverlightFill
 
 		private void line(object sender, RoutedEventArgs e)
 		{
-		int strokeCount = 1000;
-		int pointCount = 2;
+		;
+		int strokeCount = Convert.ToInt32(strokes.Text);
+		int pointCount = Convert.ToInt32(points.Text);
 		Random random = new Random();
 			for (int i = 0; i < strokeCount; i++)
 			{
