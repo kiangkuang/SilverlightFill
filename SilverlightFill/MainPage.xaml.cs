@@ -230,5 +230,27 @@ namespace SilverlightFill
 			System.Diagnostics.Debug.WriteLine("Convert:	" + elapsedTime.TotalMilliseconds + " milliseconds");
 		}
 
+		private void line(object sender, RoutedEventArgs e)
+		{
+		int strokeCount = 1000;
+		int pointCount = 2;
+		Random random = new Random();
+			for (int i = 0; i < strokeCount; i++)
+			{
+				Stroke newStroke = new Stroke();
+				newStroke.DrawingAttributes.Color = MainPage.selectedColor;
+				newStroke.DrawingAttributes.Height = 5;
+				newStroke.DrawingAttributes.Width = 5;
+
+				for (int j = 0; j < pointCount; j++)
+				{
+					newStroke.StylusPoints.Add(new StylusPoint(random.Next(0, 800), random.Next(0, 600)));
+				}
+
+				inkCanvas.Strokes.Add(newStroke);
+			}
+			
+		}
+
 	}
 }
