@@ -29,27 +29,41 @@ namespace SilverlightFill
 		{
 			long before = DateTime.Now.Ticks;
 
-			for (int i = 0; i < inkCanvas.Strokes.Count; i++)
-			{
-				inkCanvas.Strokes[i].DrawingAttributes.Height = inkCanvas.Strokes[i].DrawingAttributes.Width = 1;
-			}
+			//make the line thinner
+			changeStrokeToThinnerWidth(inkCanvas);
 
-			WriteableBitmap wb1 = Common.convertToBitmap(inkCanvas);
-			WriteableBitmap wb2 = new WriteableBitmap(wb1.PixelWidth, wb1.PixelHeight);
-			Color targetColor = Common.getTargetColor(e, inkCanvas, wb1);
+			WriteableBitmap compressedBitmap = Common.convertToBitmap(inkCanvas);
+			WriteableBitmap outputBitmap = new WriteableBitmap(compressedBitmap.PixelWidth, compressedBitmap.PixelHeight);
+			Color targetColor = Common.getTargetColor(e, inkCanvas, compressedBitmap);
 
-			floodFill(new Point((int)e.GetPosition(inkCanvas).X, (int)e.GetPosition(inkCanvas).Y), targetColor, selectedColor, wb1, wb2);
+			floodFill(new Point((int)e.GetPosition(inkCanvas).X, (int)e.GetPosition(inkCanvas).Y), targetColor, selectedColor, compressedBitmap, outputBitmap);
 
+			addNewImageToLayoutRoot(LayoutRoot, outputBitmap);
+
+			addListsForDragFunction();
+
+			//change the line back to original width
+			changeStrokeToOriginalWidth(inkCanvas);
+
+			long after = DateTime.Now.Ticks;
+			TimeSpan elapsedTime = new TimeSpan(after - before);
+			System.Diagnostics.Debug.WriteLine("Fill:		" + elapsedTime.TotalMilliseconds + " milliseconds");
+		}
+
+		private static void addNewImageToLayoutRoot(Grid LayoutRoot, WriteableBitmap outputBitmap)
+		{
 			Image img = new Image();
-			img.Source = wb2;
+			img.Source = outputBitmap;
 			img.Stretch = Stretch.None;
 			img.HorizontalAlignment = HorizontalAlignment.Left;
 
-
 			MainPage.imageList.Add(img);
-			MainPage.wbList.Add(wb2);
+			MainPage.wbList.Add(outputBitmap);
 			LayoutRoot.Children.Add(img);
+		}
 
+		private static void addListsForDragFunction()
+		{
 			//increase backuplist
 			MainPage.imageBackupList.Add(null);
 			MainPage.imageBackupOffSet.Add(new Point());
@@ -60,27 +74,34 @@ namespace SilverlightFill
 			newList.Add(maxTop);
 			newList.Add(maxBottom);
 			MainPage.imageMaxOffSet.Add(newList);
-			//Common.calculateMax(img, e, inkCanvas, MainPage.imageList.Count-1);
+		}
+
+		private static void changeStrokeToOriginalWidth(InkPresenter inkCanvas)
+		{
 			for (int i = 0; i < inkCanvas.Strokes.Count; i++)
 			{
 				inkCanvas.Strokes[i].DrawingAttributes.Height = inkCanvas.Strokes[i].DrawingAttributes.Width = 5;
 			}
-
-			long after = DateTime.Now.Ticks;
-			TimeSpan elapsedTime = new TimeSpan(after - before);
-			System.Diagnostics.Debug.WriteLine("Fill:		" + elapsedTime.TotalMilliseconds + " milliseconds");
 		}
 
-		public static void floodFill(Point pt, Color targetColor, Color replacementColor, WriteableBitmap wb1, WriteableBitmap wb2)
+		private static void changeStrokeToThinnerWidth(InkPresenter inkCanvas)
+		{
+			for (int i = 0; i < inkCanvas.Strokes.Count; i++)
+			{
+				inkCanvas.Strokes[i].DrawingAttributes.Height = inkCanvas.Strokes[i].DrawingAttributes.Width = 1;
+			}
+		}
+
+		public static void floodFill(Point pt, Color targetColor, Color replacementColor, WriteableBitmap compressedBitmap, WriteableBitmap outputBitmap)
 		{
 			Queue<Point> q = new Queue<Point>();
 
-			maxLeft = wb1.PixelWidth;
+			maxLeft = compressedBitmap.PixelWidth;
 			maxRight = 0;
-			maxTop = wb1.PixelHeight;
+			maxTop = compressedBitmap.PixelHeight;
 			maxBottom = 0;
 
-			if (!Common.ColorMatch(wb1.GetPixel((int)pt.X, (int)pt.Y), targetColor) || Common.ColorMatch(wb1.GetPixel((int)pt.X, (int)pt.Y), replacementColor))
+			if (!Common.ColorMatch(compressedBitmap.GetPixel((int)pt.X, (int)pt.Y), targetColor) || Common.ColorMatch(compressedBitmap.GetPixel((int)pt.X, (int)pt.Y), replacementColor))
 			{
 				return;
 			}
@@ -90,54 +111,54 @@ namespace SilverlightFill
 			{
 				Point n = q.Dequeue();
 
-				if (Common.ColorMatch(wb1.GetPixel((int)n.X, (int)n.Y), targetColor))
+				if (Common.ColorMatch(compressedBitmap.GetPixel((int)n.X, (int)n.Y), targetColor))
 				{
-					Point w = n;
-					Point e = n;
+					Point west = n;
+					Point east = n;
 
-					while ((w.X >= 0) && (w.X < wb1.PixelWidth) && Common.ColorMatch(wb1.GetPixel((int)w.X, (int)w.Y), targetColor))
+					while ((west.X >= 0) && (west.X < compressedBitmap.PixelWidth) && Common.ColorMatch(compressedBitmap.GetPixel((int)west.X, (int)west.Y), targetColor))
 					{
-						w.X--;
+						west.X--;
 					}
-					while ((e.X >= 0) && (e.X < wb1.PixelWidth) && Common.ColorMatch(wb1.GetPixel((int)e.X, (int)e.Y), targetColor))
+					while ((east.X >= 0) && (east.X < compressedBitmap.PixelWidth) && Common.ColorMatch(compressedBitmap.GetPixel((int)east.X, (int)east.Y), targetColor))
 					{
-						e.X++;
+						east.X++;
 					}
-					w.X++;
-					e.X--;
+					west.X++;
+					east.X--;
 
-					if (w.X < maxLeft)
+					if (west.X < maxLeft)
 					{
-						maxLeft = w.X;
-					}
-
-					if (e.X > maxRight)
-					{
-						maxRight = e.X;
+						maxLeft = west.X;
 					}
 
-
-					for (int i = (int)w.X; i <= e.X; i++)
+					if (east.X > maxRight)
 					{
-						wb1.SetPixel(i, (int)w.Y, replacementColor);
-						wb2.SetPixel(i, (int)w.Y, replacementColor);
-						if ((i >= 0) && (i < wb1.PixelWidth) && (w.Y + 1 >= 0 && w.Y + 1 < wb1.PixelHeight) && Common.ColorMatch(wb1.GetPixel(i, (int)w.Y + 1), targetColor))
+						maxRight = east.X;
+					}
+
+
+					for (int i = (int)west.X; i <= east.X; i++)
+					{
+						compressedBitmap.SetPixel(i, (int)west.Y, replacementColor);
+						outputBitmap.SetPixel(i, (int)west.Y, replacementColor);
+						if ((i >= 0) && (i < compressedBitmap.PixelWidth) && (west.Y + 1 >= 0 && west.Y + 1 < compressedBitmap.PixelHeight) && Common.ColorMatch(compressedBitmap.GetPixel(i, (int)west.Y + 1), targetColor))
 						{
-							if (w.Y + 1 < maxTop)
+							if (west.Y + 1 < maxTop)
 							{
-								maxTop = w.Y + 1;
+								maxTop = west.Y + 1;
 							}
 
-							q.Enqueue(new Point(i, w.Y + 1));
+							q.Enqueue(new Point(i, west.Y + 1));
 						}
-						if ((i >= 0) && (i < wb1.PixelWidth) && (w.Y - 1 >= 0 && w.Y - 1 < wb1.PixelHeight) && Common.ColorMatch(wb1.GetPixel(i, (int)w.Y - 1), targetColor))
+						if ((i >= 0) && (i < compressedBitmap.PixelWidth) && (west.Y - 1 >= 0 && west.Y - 1 < compressedBitmap.PixelHeight) && Common.ColorMatch(compressedBitmap.GetPixel(i, (int)west.Y - 1), targetColor))
 						{
-							if (w.Y - 1 > maxBottom)
+							if (west.Y - 1 > maxBottom)
 							{
-								maxBottom = w.Y - 1;
+								maxBottom = west.Y - 1;
 							}
 
-							q.Enqueue(new Point(i, w.Y - 1));
+							q.Enqueue(new Point(i, west.Y - 1));
 						}
 					}
 				}
