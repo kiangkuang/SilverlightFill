@@ -65,14 +65,17 @@ namespace SilverlightFill
 			{
 
 				//Calculate offset of left, right, top, bottom 
-				offSetLeft = e.GetPosition(inkCanvas).X - MainPage.imageMaxOffSet[clickedLayer][LEFT]; 
-				offSetRight = MainPage.imageMaxOffSet[clickedLayer][RIGHT] - e.GetPosition(inkCanvas).X;
-				offSetTop = e.GetPosition(inkCanvas).Y - MainPage.imageMaxOffSet[clickedLayer][TOP];
-				offSetBottom = MainPage.imageMaxOffSet[clickedLayer][BOTTOM] - e.GetPosition(inkCanvas).Y;
+				offSetLeft = e.GetPosition(inkCanvas).X - MainPage.ImageToBorderDist[clickedLayer][LEFT]; 
+				offSetRight = MainPage.ImageToBorderDist[clickedLayer][RIGHT] - e.GetPosition(inkCanvas).X;
+				offSetTop = e.GetPosition(inkCanvas).Y - MainPage.ImageToBorderDist[clickedLayer][TOP];
+				offSetBottom = MainPage.ImageToBorderDist[clickedLayer][BOTTOM] - e.GetPosition(inkCanvas).Y;
 
-				//System.Diagnostics.Debug.WriteLine("maxLeft " + MainPage.imageMaxOffSet[clickedLayer][LEFT]);
+
+				//System.Diagnostics.Debug.WriteLine("maxLeft " + MainPage.ImageToBorderDist[clickedLayer][LEFT]);
 				//System.Diagnostics.Debug.WriteLine("offSetLeft " + offSetLeft);
-				//System.Diagnostics.Debug.WriteLine("offSetTop " + offSetTop);
+				System.Diagnostics.Debug.WriteLine("positionY" + e.GetPosition(inkCanvas).Y);
+				System.Diagnostics.Debug.WriteLine("maxTop " + MainPage.ImageToBorderDist[clickedLayer][TOP]);
+				System.Diagnostics.Debug.WriteLine("offSetTop " + offSetTop);
 
 				//if the clickedLayer's image is out of bound
 				if (clickedLayer != -1 && MainPage.imageBackupList[clickedLayer] != null)
@@ -208,9 +211,9 @@ namespace SilverlightFill
 
 				//find the new Max
 
-				Common.findNewMax(img, e, inkCanvas, clickedLayer, offSetLeft, offSetRight, offSetTop, offSetBottom, MainPage.imageMaxOffSet[clickedLayer][LEFT], MainPage.imageMaxOffSet[clickedLayer][RIGHT], MainPage.imageMaxOffSet[clickedLayer][TOP], MainPage.imageMaxOffSet[clickedLayer][BOTTOM]);
+				Common.findNewMax(img, e, inkCanvas, clickedLayer, offSetLeft, offSetRight, offSetTop, offSetBottom, MainPage.ImageToBorderDist[clickedLayer][LEFT], MainPage.ImageToBorderDist[clickedLayer][RIGHT], MainPage.ImageToBorderDist[clickedLayer][TOP], MainPage.ImageToBorderDist[clickedLayer][BOTTOM]);
 				//Common.calculateMax(img, e, inkCanvas, clickedLayer);
-				Common.checkIfOutOfBound(e, inkCanvas, img, clickedLayer, imageBackup, offSetLeft, offSetRight, offSetTop, offSetBottom, MainPage.imageMaxOffSet[clickedLayer][LEFT], MainPage.imageMaxOffSet[clickedLayer][RIGHT], MainPage.imageMaxOffSet[clickedLayer][TOP], MainPage.imageMaxOffSet[clickedLayer][BOTTOM]);
+				Common.checkIfOutOfBound(e, inkCanvas, img, clickedLayer, imageBackup, offSetLeft, offSetRight, offSetTop, offSetBottom, MainPage.ImageToBorderDist[clickedLayer][LEFT], MainPage.ImageToBorderDist[clickedLayer][RIGHT], MainPage.ImageToBorderDist[clickedLayer][TOP], MainPage.ImageToBorderDist[clickedLayer][BOTTOM]);
 
 
 			}
@@ -251,7 +254,7 @@ namespace SilverlightFill
 				//calculate max
 				Image img = new Image();
 				img.Source = imageBackup;
-				Common.findNewMax(img, e, inkCanvas, clickedLayer, offSetLeft, offSetRight, offSetTop, offSetBottom, MainPage.imageMaxOffSet[clickedLayer][LEFT], MainPage.imageMaxOffSet[clickedLayer][RIGHT], MainPage.imageMaxOffSet[clickedLayer][TOP], MainPage.imageMaxOffSet[clickedLayer][BOTTOM]);
+				Common.findNewMax(img, e, inkCanvas, clickedLayer, offSetLeft, offSetRight, offSetTop, offSetBottom, MainPage.ImageToBorderDist[clickedLayer][LEFT], MainPage.ImageToBorderDist[clickedLayer][RIGHT], MainPage.ImageToBorderDist[clickedLayer][TOP], MainPage.ImageToBorderDist[clickedLayer][BOTTOM]);
 				//Common.calculateMax(img, e, inkCanvas, clickedLayer);
 			}
 			

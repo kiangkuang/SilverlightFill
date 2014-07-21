@@ -71,9 +71,10 @@ namespace SilverlightFill
 			List<double> newList = new List<double>();
 			newList.Add(maxLeft);
 			newList.Add(maxRight);
+			System.Diagnostics.Debug.WriteLine("addlist" + maxTop);
 			newList.Add(maxTop);
 			newList.Add(maxBottom);
-			MainPage.imageMaxOffSet.Add(newList);
+			MainPage.ImageToBorderDist.Add(newList);
 		}
 
 		private static void changeStrokeToOriginalWidth(InkPresenter inkCanvas)
@@ -97,14 +98,17 @@ namespace SilverlightFill
 			Queue<Point> q = new Queue<Point>();
 
 			maxLeft = compressedBitmap.PixelWidth;
+			//System.Diagnostics.Debug.WriteLine(maxLeft);
 			maxRight = 0;
 			maxTop = compressedBitmap.PixelHeight;
+			System.Diagnostics.Debug.WriteLine("while filling" + maxTop);
 			maxBottom = 0;
 
 			if (!Common.ColorMatch(compressedBitmap.GetPixel((int)pt.X, (int)pt.Y), targetColor) || Common.ColorMatch(compressedBitmap.GetPixel((int)pt.X, (int)pt.Y), replacementColor))
 			{
 				return;
 			}
+
 			q.Enqueue(pt);
 
 			while (q.Count > 0)
@@ -144,18 +148,18 @@ namespace SilverlightFill
 						outputBitmap.SetPixel(i, (int)west.Y, replacementColor);
 						if ((i >= 0) && (i < compressedBitmap.PixelWidth) && (west.Y + 1 >= 0 && west.Y + 1 < compressedBitmap.PixelHeight) && Common.ColorMatch(compressedBitmap.GetPixel(i, (int)west.Y + 1), targetColor))
 						{
-							if (west.Y + 1 < maxTop)
+							if (west.Y + 1 > maxBottom)
 							{
-								maxTop = west.Y + 1;
+								maxBottom = west.Y + 1;
 							}
 
 							q.Enqueue(new Point(i, west.Y + 1));
 						}
 						if ((i >= 0) && (i < compressedBitmap.PixelWidth) && (west.Y - 1 >= 0 && west.Y - 1 < compressedBitmap.PixelHeight) && Common.ColorMatch(compressedBitmap.GetPixel(i, (int)west.Y - 1), targetColor))
 						{
-							if (west.Y - 1 > maxBottom)
+							if (west.Y - 1 < maxTop)
 							{
-								maxBottom = west.Y - 1;
+								maxTop = west.Y - 1;
 							}
 
 							q.Enqueue(new Point(i, west.Y - 1));

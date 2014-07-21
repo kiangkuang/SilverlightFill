@@ -139,7 +139,7 @@ namespace SilverlightFill
 					if (wb.GetPixel(w, h) != Color.FromArgb(0, 0, 0, 0) && !flag1)
 					{
 						flag1 = true;
-						MainPage.imageMaxOffSet[clickedLayer][LEFT] = w;
+						MainPage.ImageToBorderDist[clickedLayer][LEFT] = w;
 					}
 
 					if (wb.GetPixel(w, h) != Color.FromArgb(0, 0, 0, 0) && flag1)
@@ -150,7 +150,7 @@ namespace SilverlightFill
 
 				if (flag1 && !flag2)
 				{
-					MainPage.imageMaxOffSet[clickedLayer][RIGHT] = w;
+					MainPage.ImageToBorderDist[clickedLayer][RIGHT] = w;
 					break;
 				}
 
@@ -170,7 +170,7 @@ namespace SilverlightFill
 					if (wb.GetPixel(w, h) != Color.FromArgb(0, 0, 0, 0) && !flag1)
 					{
 						flag1 = true;
-						MainPage.imageMaxOffSet[clickedLayer][TOP] = h;
+						MainPage.ImageToBorderDist[clickedLayer][TOP] = h;
 					}
 
 					if (wb.GetPixel(w, h) != Color.FromArgb(0, 0, 0, 0) && flag1)
@@ -181,7 +181,7 @@ namespace SilverlightFill
 
 				if (flag1 && !flag2)
 				{
-					MainPage.imageMaxOffSet[clickedLayer][BOTTOM] = h;
+					MainPage.ImageToBorderDist[clickedLayer][BOTTOM] = h;
 					break;
 				}
 
@@ -201,10 +201,10 @@ namespace SilverlightFill
 				return;
 			}
 
-			MainPage.imageMaxOffSet[clickedLayer][LEFT] = e.GetPosition(inkCanvas).X - offSetLeft;
-			MainPage.imageMaxOffSet[clickedLayer][RIGHT] = e.GetPosition(inkCanvas).X + offSetRight;
-			MainPage.imageMaxOffSet[clickedLayer][TOP] = e.GetPosition(inkCanvas).Y - offSetTop;
-			MainPage.imageMaxOffSet[clickedLayer][BOTTOM] = e.GetPosition(inkCanvas).Y + offSetBottom;
+			MainPage.ImageToBorderDist[clickedLayer][LEFT] = e.GetPosition(inkCanvas).X - offSetLeft;
+			MainPage.ImageToBorderDist[clickedLayer][RIGHT] = e.GetPosition(inkCanvas).X + offSetRight;
+			MainPage.ImageToBorderDist[clickedLayer][TOP] = e.GetPosition(inkCanvas).Y - offSetTop;
+			MainPage.ImageToBorderDist[clickedLayer][BOTTOM] = e.GetPosition(inkCanvas).Y + offSetBottom;
 		}
 	}
 }

@@ -25,7 +25,7 @@ namespace SilverlightFill
 		private const int INTERSECTMODE = 5;
 
 		public static List<Point> imageBackupOffSet = new List<Point>();
-		public static List<List<double>> imageMaxOffSet = new List<List<double>>();
+		public static List<List<double>> ImageToBorderDist = new List<List<double>>();
 		public static List<WriteableBitmap> imageBackupList = new List<WriteableBitmap>();
 
 
