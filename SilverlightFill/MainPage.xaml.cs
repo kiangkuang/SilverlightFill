@@ -12,8 +12,8 @@ namespace SilverlightFill
 	public partial class MainPage : UserControl
 	{
 		public static Color selectedColor = Colors.Black;
-		public static List<Image> imageList = new List<Image>();
-		public static List<WriteableBitmap> wbList = new List<WriteableBitmap>();
+		//public static List<Image> imageList = new List<Image>();
+		//public static List<WriteableBitmap> wbList = new List<WriteableBitmap>();
 
 		private int mode;
 		private const int DELETEMODE = -1;
@@ -24,9 +24,11 @@ namespace SilverlightFill
 		private const int SUBTRACTMODE = 4;
 		private const int INTERSECTMODE = 5;
 
-		public static List<Point> imageBackupOffSet = new List<Point>();
-		public static List<List<double>> ImageToBorderDist = new List<List<double>>();
-		public static List<WriteableBitmap> imageBackupList = new List<WriteableBitmap>();
+		//public static List<Point> imageBackupOffSet = new List<Point>();
+		//public static List<List<double>> ImageToBorderDist = new List<List<double>>();
+		//public static List<WriteableBitmap> imageBackupList = new List<WriteableBitmap>();
+		
+		public static List<Layer> layerList = new List<Layer>();
 
 
 		public MainPage()
@@ -81,16 +83,15 @@ namespace SilverlightFill
 		}
 		private void clear(object sender, RoutedEventArgs e)
 		{
-			for (int i = 0; i < imageList.Count; i++)
+			for (int i = 0; i < layerList.Count; i++)
 			{
-				LayoutRoot.Children.Remove(imageList[i]);
+				LayoutRoot.Children.Remove(layerList[i].img);
 			}
 			inkCanvas.Strokes.Clear();
-			imageList.Clear();
-			wbList.Clear();
+			layerList.Clear();
 
 			Common.convertToBitmap(inkCanvas);
-			strokeCounter.Content = "Fill Layers: " + imageList.Count;
+			strokeCounter.Content = "Fill Layers: " + layerList.Count;
 		}
 		private void delete(object sender, RoutedEventArgs e)
 		{
@@ -200,7 +201,7 @@ namespace SilverlightFill
 					Delete.up(e, inkCanvas, LayoutRoot);
 					break;
 			}
-			strokeCounter.Content = "Fill Layers: " + imageList.Count;
+			strokeCounter.Content = "Fill Layers: " + layerList.Count;
 		}
 
 		private void draw800600(object sender, RoutedEventArgs e)

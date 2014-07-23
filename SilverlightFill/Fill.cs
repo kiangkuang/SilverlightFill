@@ -38,43 +38,13 @@ namespace SilverlightFill
 
 			floodFill(new Point((int)e.GetPosition(inkCanvas).X, (int)e.GetPosition(inkCanvas).Y), targetColor, selectedColor, compressedBitmap, outputBitmap);
 
-			addNewImageToLayoutRoot(LayoutRoot, outputBitmap);
-
-			addListsForDragFunction();
-
+			MainPage.layerList.Add(new Layer(LayoutRoot, outputBitmap));
 			//change the line back to original width
 			changeStrokeToOriginalWidth(inkCanvas);
 
 			long after = DateTime.Now.Ticks;
 			TimeSpan elapsedTime = new TimeSpan(after - before);
 			System.Diagnostics.Debug.WriteLine("Fill:		" + elapsedTime.TotalMilliseconds + " milliseconds");
-		}
-
-		private static void addNewImageToLayoutRoot(Grid LayoutRoot, WriteableBitmap outputBitmap)
-		{
-			Image img = new Image();
-			img.Source = outputBitmap;
-			img.Stretch = Stretch.None;
-			img.HorizontalAlignment = HorizontalAlignment.Left;
-
-			MainPage.imageList.Add(img);
-			MainPage.wbList.Add(outputBitmap);
-			LayoutRoot.Children.Add(img);
-		}
-
-		private static void addListsForDragFunction()
-		{
-			//increase backuplist
-			MainPage.imageBackupList.Add(null);
-			MainPage.imageBackupOffSet.Add(new Point());
-			//Calculate max left, right, top, bottom 
-			List<double> newList = new List<double>();
-			newList.Add(maxLeft);
-			newList.Add(maxRight);
-			System.Diagnostics.Debug.WriteLine("addlist" + maxTop);
-			newList.Add(maxTop);
-			newList.Add(maxBottom);
-			MainPage.ImageToBorderDist.Add(newList);
 		}
 
 		private static void changeStrokeToOriginalWidth(InkPresenter inkCanvas)
