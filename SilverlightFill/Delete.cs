@@ -58,9 +58,8 @@ namespace SilverlightFill
 
 		private static void removeSelectedLayer(Grid LayoutRoot, int clickedLayer)
 		{
-			MainPage.wbList.RemoveAt(clickedLayer);
-			LayoutRoot.Children.Remove(MainPage.imageList[clickedLayer]);
-			MainPage.imageList.RemoveAt(clickedLayer);
+			LayoutRoot.Children.Remove(MainPage.layerList[clickedLayer].img);
+			MainPage.layerList.RemoveAt(clickedLayer);
 		}
 	}
 }
