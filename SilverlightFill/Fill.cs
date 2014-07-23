@@ -101,7 +101,7 @@ namespace SilverlightFill
 			//System.Diagnostics.Debug.WriteLine(maxLeft);
 			maxRight = 0;
 			maxTop = compressedBitmap.PixelHeight;
-			System.Diagnostics.Debug.WriteLine("while filling" + maxTop);
+			//System.Diagnostics.Debug.WriteLine("while filling" + maxTop);
 			maxBottom = 0;
 
 			if (!Common.ColorMatch(compressedBitmap.GetPixel((int)pt.X, (int)pt.Y), targetColor) || Common.ColorMatch(compressedBitmap.GetPixel((int)pt.X, (int)pt.Y), replacementColor))

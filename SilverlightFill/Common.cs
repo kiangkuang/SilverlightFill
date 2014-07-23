@@ -194,7 +194,7 @@ namespace SilverlightFill
 
 		}
 
-		public static void findNewMax(Image image, MouseButtonEventArgs e, InkPresenter inkCanvas, int clickedLayer, double offSetLeft, double offSetRight, double offSetTop, double offSetBottom, double maxLeft, double maxRight, double maxTop, double maxBottom)
+		public static void findNewImageToBorderDist(Image image, MouseButtonEventArgs e, InkPresenter inkCanvas, int clickedLayer, double offSetLeft, double offSetRight, double offSetTop, double offSetBottom, double maxLeft, double maxRight, double maxTop, double maxBottom)
 		{
 			if (maxLeft == 0 || maxRight == 0 || maxTop == 0 || maxBottom == 0)
 			{
