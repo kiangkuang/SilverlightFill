@@ -41,7 +41,7 @@ namespace SilverlightFill
 			changeStrokeToThinnerWidth(inkCanvas);
 
 			WriteableBitmap compressedBitmap = Common.convertToBitmap(inkCanvas);
-			WriteableBitmap clickedBitmap = MainPage.wbList[clickedLayer];
+			WriteableBitmap clickedBitmap = MainPage.layerList[clickedLayer].wb;
 
 			substractSelectedArea(e, inkCanvas, clickedLayer, compressedBitmap, clickedBitmap);
 
@@ -69,8 +69,8 @@ namespace SilverlightFill
 			Color targetColor = Common.getTargetColor(e, inkCanvas, compressedBitmap);
 
 			Fill.floodFill(new Point((int)e.GetPosition(inkCanvas).X, (int)e.GetPosition(inkCanvas).Y), targetColor, Color.FromArgb(0, 0, 0, 0), compressedBitmap, clickedBitmap);
-			MainPage.wbList[clickedLayer] = clickedBitmap;
-			MainPage.imageList[clickedLayer].Source = clickedBitmap;
+			MainPage.layerList[clickedLayer].wb = clickedBitmap;
+			MainPage.layerList[clickedLayer].img.Source = clickedBitmap;
 		}
 
 

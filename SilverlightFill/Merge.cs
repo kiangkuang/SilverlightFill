@@ -29,7 +29,7 @@ namespace SilverlightFill
 			WriteableBitmap wb1 = Common.convertToBitmap(inkCanvas);
 			Color targetColor = Common.getTargetColor(e, inkCanvas, wb1);
 
-			Fill.floodFill(new Point((int)e.GetPosition(inkCanvas).X, (int)e.GetPosition(inkCanvas).Y), targetColor, selectedColor, wb1, MainPage.wbList[clickedLayer]);
+			Fill.floodFill(new Point((int)e.GetPosition(inkCanvas).X, (int)e.GetPosition(inkCanvas).Y), targetColor, selectedColor, wb1, MainPage.layerList[clickedLayer].wb);
 
 		}
 	}

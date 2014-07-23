@@ -67,8 +67,8 @@ namespace SilverlightFill
 			Fill.floodFill(new Point((int)e.GetPosition(inkCanvas).X, (int)e.GetPosition(inkCanvas).Y), targetColor, tempColor, compressBitmap, tempBitmap);
 			Fill.floodFill(new Point((int)e.GetPosition(inkCanvas).X, (int)e.GetPosition(inkCanvas).Y), tempColor, targetColor, tempBitmap, outputBitmap);
 
-			MainPage.wbList[clickedLayer] = outputBitmap;
-			MainPage.imageList[clickedLayer].Source = outputBitmap;
+			MainPage.layerList[clickedLayer].wb = outputBitmap;
+			MainPage.layerList[clickedLayer].img.Source = outputBitmap;
 		}
 
 		private static Color setDifferentColor(ref Color targetColor, ref int tempR)
