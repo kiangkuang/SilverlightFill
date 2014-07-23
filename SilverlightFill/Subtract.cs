@@ -32,27 +32,45 @@ namespace SilverlightFill
 		public static void up(MouseButtonEventArgs e, InkPresenter inkCanvas, Grid LayoutRoot, Color selectedColor)
 		{
 			int clickedLayer = Common.hitTestLayer(e, inkCanvas);
+			
 			if (clickedLayer == -1)
 			{
 				return;
 			}
 
-			for (int i = 0; i < inkCanvas.Strokes.Count; i++)
-			{
-				inkCanvas.Strokes[i].DrawingAttributes.Height = inkCanvas.Strokes[i].DrawingAttributes.Width = 1;
-			}
+			changeStrokeToThinnerWidth(inkCanvas);
 
-			WriteableBitmap wb1 = Common.convertToBitmap(inkCanvas);
-			WriteableBitmap wb2 = MainPage.wbList[clickedLayer];
-			Color targetColor = Common.getTargetColor(e, inkCanvas, wb1);
+			WriteableBitmap compressedBitmap = Common.convertToBitmap(inkCanvas);
+			WriteableBitmap clickedBitmap = MainPage.wbList[clickedLayer];
 
-			Fill.floodFill(new Point((int)e.GetPosition(inkCanvas).X, (int)e.GetPosition(inkCanvas).Y), targetColor, Color.FromArgb(0, 0, 0, 0), wb1, wb2);
-			MainPage.wbList[clickedLayer] = wb2;
-			MainPage.imageList[clickedLayer].Source = wb2;
+			substractSelectedArea(e, inkCanvas, clickedLayer, compressedBitmap, clickedBitmap);
+
+			changeStrokeToOriginalWidth(inkCanvas);
+		}
+
+		private static void changeStrokeToOriginalWidth(InkPresenter inkCanvas)
+		{
 			for (int i = 0; i < inkCanvas.Strokes.Count; i++)
 			{
 				inkCanvas.Strokes[i].DrawingAttributes.Height = inkCanvas.Strokes[i].DrawingAttributes.Width = 5;
 			}
+		}
+
+		private static void changeStrokeToThinnerWidth(InkPresenter inkCanvas)
+		{
+			for (int i = 0; i < inkCanvas.Strokes.Count; i++)
+			{
+				inkCanvas.Strokes[i].DrawingAttributes.Height = inkCanvas.Strokes[i].DrawingAttributes.Width = 1;
+			}
+		}
+
+		private static void substractSelectedArea(MouseButtonEventArgs e, InkPresenter inkCanvas, int clickedLayer, WriteableBitmap compressedBitmap, WriteableBitmap clickedBitmap)
+		{
+			Color targetColor = Common.getTargetColor(e, inkCanvas, compressedBitmap);
+
+			Fill.floodFill(new Point((int)e.GetPosition(inkCanvas).X, (int)e.GetPosition(inkCanvas).Y), targetColor, Color.FromArgb(0, 0, 0, 0), compressedBitmap, clickedBitmap);
+			MainPage.wbList[clickedLayer] = clickedBitmap;
+			MainPage.imageList[clickedLayer].Source = clickedBitmap;
 		}
 
 

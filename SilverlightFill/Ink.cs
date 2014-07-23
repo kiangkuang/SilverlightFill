@@ -11,13 +11,17 @@ namespace SilverlightFill
 		public static void down(MouseButtonEventArgs e, InkPresenter inkCanvas)
 		{
 			inkCanvas.CaptureMouse();
+			setDrawingAttributes();
+			newStroke.StylusPoints.Add(e.StylusDevice.GetStylusPoints(inkCanvas));
+			inkCanvas.Strokes.Add(newStroke);
+		}
+
+		private static void setDrawingAttributes()
+		{
 			newStroke = new Stroke();
 			newStroke.DrawingAttributes.Color = MainPage.selectedColor;
 			newStroke.DrawingAttributes.Height = 5;
 			newStroke.DrawingAttributes.Width = 5;
-
-			newStroke.StylusPoints.Add(e.StylusDevice.GetStylusPoints(inkCanvas));
-			inkCanvas.Strokes.Add(newStroke);
 		}
 
 		public static void move(MouseEventArgs e, InkPresenter inkCanvas)
