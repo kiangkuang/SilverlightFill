@@ -51,9 +51,9 @@ namespace SilverlightFill
 		public static WriteableBitmap convertToBitmap(InkPresenter inkCanvas)
 		{
 			WriteableBitmap wb = new WriteableBitmap((int)inkCanvas.ActualWidth, (int)inkCanvas.ActualHeight);
-			for (int i = 0; i < MainPage.imageList.Count; i++)
+			for (int i = 0; i < MainPage.layerList.Count; i++)
 			{
-				wb.Render(MainPage.imageList[i], new TranslateTransform());
+				wb.Render(MainPage.layerList[i].img, new TranslateTransform());
 			}
 
 			wb.Render(inkCanvas, new TranslateTransform());
@@ -68,9 +68,9 @@ namespace SilverlightFill
 
 		public static int hitTestLayer(MouseButtonEventArgs e, InkPresenter inkCanvas)
 		{
-			for (int i = MainPage.wbList.Count - 1; i >= 0; i--)
+			for (int i = MainPage.layerList.Count - 1; i >= 0; i--)
 			{
-				if (getTargetColor(e, inkCanvas, MainPage.wbList[i]) != Color.FromArgb(0, 0, 0, 0))
+				if (getTargetColor(e, inkCanvas, MainPage.layerList[i].wb) != Color.FromArgb(0, 0, 0, 0))
 				{
 					return i;
 				}
@@ -85,31 +85,31 @@ namespace SilverlightFill
 			if ( test - offSetLeft <= 0 || maxLeft == 0)
 			{
 				System.Diagnostics.Debug.WriteLine("left out");
-				MainPage.imageBackupList[clickedLayer] = imageBackup;
+				MainPage.layerList[clickedLayer].imgBackup = imageBackup;
 				Point newPoint = new Point(img.Margin.Left, img.Margin.Top);
-				MainPage.imageBackupOffSet[clickedLayer] = newPoint;
+				MainPage.layerList[clickedLayer].imageBackupOffset = newPoint;
 
 			}
-			else if (e.GetPosition(inkCanvas).X + offSetRight >= MainPage.wbList[clickedLayer].PixelWidth || maxRight == 0)
+			else if (e.GetPosition(inkCanvas).X + offSetRight >= MainPage.layerList[clickedLayer].wb.PixelWidth || maxRight == 0)
 			{  
 				System.Diagnostics.Debug.WriteLine("right out");
-				MainPage.imageBackupList[clickedLayer] = imageBackup;
+				MainPage.layerList[clickedLayer].imgBackup = imageBackup;
 				Point newPoint = new Point(img.Margin.Left, img.Margin.Top);
-				MainPage.imageBackupOffSet[clickedLayer] = newPoint;
+				MainPage.layerList[clickedLayer].imageBackupOffset = newPoint;
 			}
 			else if (e.GetPosition(inkCanvas).Y - offSetTop <= 0 || maxTop == 0)
 			{    
 				System.Diagnostics.Debug.WriteLine("top out");
-				MainPage.imageBackupList[clickedLayer] = imageBackup;
+				MainPage.layerList[clickedLayer].imgBackup = imageBackup;
 				Point newPoint = new Point(img.Margin.Left, img.Margin.Top);
-				MainPage.imageBackupOffSet[clickedLayer] = newPoint;
+				MainPage.layerList[clickedLayer].imageBackupOffset = newPoint;
 			}
-			else if (e.GetPosition(inkCanvas).Y + offSetBottom >= MainPage.wbList[clickedLayer].PixelHeight || maxBottom == 0)
+			else if (e.GetPosition(inkCanvas).Y + offSetBottom >= MainPage.layerList[clickedLayer].wb.PixelHeight || maxBottom == 0)
 			{
 				System.Diagnostics.Debug.WriteLine("bottom out");
-				MainPage.imageBackupList[clickedLayer] = imageBackup;
+				MainPage.layerList[clickedLayer].imgBackup = imageBackup;
 				Point newPoint = new Point(img.Margin.Left, img.Margin.Top);
-				MainPage.imageBackupOffSet[clickedLayer] = newPoint;
+				MainPage.layerList[clickedLayer].imageBackupOffset = newPoint;
 			}
 		}
 
@@ -129,17 +129,17 @@ namespace SilverlightFill
 				return;
 			}
 
-			WriteableBitmap wb = MainPage.wbList[clickedLayer];
+			WriteableBitmap wb = MainPage.layerList[clickedLayer].wb;
 
 			//max left and right
-			for (int w = 0; w < MainPage.wbList[clickedLayer].PixelWidth; w++)
+			for (int w = 0; w < MainPage.layerList[clickedLayer].wb.PixelWidth; w++)
 			{
-				for (int h = 0; h < MainPage.wbList[clickedLayer].PixelHeight; h++)
+				for (int h = 0; h < MainPage.layerList[clickedLayer].wb.PixelHeight; h++)
 				{
 					if (wb.GetPixel(w, h) != Color.FromArgb(0, 0, 0, 0) && !flag1)
 					{
 						flag1 = true;
-						MainPage.ImageToBorderDist[clickedLayer][LEFT] = w;
+						MainPage.layerList[clickedLayer].imageToBorderDist[LEFT] = w;
 					}
 
 					if (wb.GetPixel(w, h) != Color.FromArgb(0, 0, 0, 0) && flag1)
@@ -150,7 +150,7 @@ namespace SilverlightFill
 
 				if (flag1 && !flag2)
 				{
-					MainPage.ImageToBorderDist[clickedLayer][RIGHT] = w;
+					MainPage.layerList[clickedLayer].imageToBorderDist[RIGHT] = w;
 					break;
 				}
 
@@ -163,14 +163,14 @@ namespace SilverlightFill
 			flag2 = false;
 
 			//max top and bottom
-			for (int h = 0; h < MainPage.wbList[clickedLayer].PixelHeight; h++)
+			for (int h = 0; h < MainPage.layerList[clickedLayer].wb.PixelHeight; h++)
 			{
-				for (int w = 0; w < MainPage.wbList[clickedLayer].PixelWidth; w++)
+				for (int w = 0; w < MainPage.layerList[clickedLayer].wb.PixelWidth; w++)
 				{
 					if (wb.GetPixel(w, h) != Color.FromArgb(0, 0, 0, 0) && !flag1)
 					{
 						flag1 = true;
-						MainPage.ImageToBorderDist[clickedLayer][TOP] = h;
+						MainPage.layerList[clickedLayer].imageToBorderDist[TOP] = h;
 					}
 
 					if (wb.GetPixel(w, h) != Color.FromArgb(0, 0, 0, 0) && flag1)
@@ -181,7 +181,7 @@ namespace SilverlightFill
 
 				if (flag1 && !flag2)
 				{
-					MainPage.ImageToBorderDist[clickedLayer][BOTTOM] = h;
+					MainPage.layerList[clickedLayer].imageToBorderDist[BOTTOM] = h;
 					break;
 				}
 
@@ -201,10 +201,10 @@ namespace SilverlightFill
 				return;
 			}
 
-			MainPage.ImageToBorderDist[clickedLayer][LEFT] = e.GetPosition(inkCanvas).X - offSetLeft;
-			MainPage.ImageToBorderDist[clickedLayer][RIGHT] = e.GetPosition(inkCanvas).X + offSetRight;
-			MainPage.ImageToBorderDist[clickedLayer][TOP] = e.GetPosition(inkCanvas).Y - offSetTop;
-			MainPage.ImageToBorderDist[clickedLayer][BOTTOM] = e.GetPosition(inkCanvas).Y + offSetBottom;
+			MainPage.layerList[clickedLayer].imageToBorderDist[LEFT] = e.GetPosition(inkCanvas).X - offSetLeft;
+			MainPage.layerList[clickedLayer].imageToBorderDist[RIGHT] = e.GetPosition(inkCanvas).X + offSetRight;
+			MainPage.layerList[clickedLayer].imageToBorderDist[TOP] = e.GetPosition(inkCanvas).Y - offSetTop;
+			MainPage.layerList[clickedLayer].imageToBorderDist[BOTTOM] = e.GetPosition(inkCanvas).Y + offSetBottom;
 		}
 	}
 }
