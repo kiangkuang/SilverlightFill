@@ -38,7 +38,7 @@ namespace SilverlightFill
 
 			floodFill(new Point((int)e.GetPosition(inkCanvas).X, (int)e.GetPosition(inkCanvas).Y), targetColor, selectedColor, compressedBitmap, outputBitmap);
 
-			MainPage.layerList.Add(new Layer(LayoutRoot, outputBitmap));
+			MainPage.layerList.Add(new Layer(LayoutRoot, outputBitmap, maxLeft, maxRight, maxTop, maxBottom));
 			//change the line back to original width
 			changeStrokeToOriginalWidth(inkCanvas);
 

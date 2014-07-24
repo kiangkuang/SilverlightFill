@@ -21,7 +21,7 @@ namespace SilverlightFill
 		public List<double> imageToBorderDist; // left, right, top, bottom
 		public WriteableBitmap imgBackup;
 
-		public Layer(Grid LayoutRoot, WriteableBitmap wb)
+		public Layer(Grid LayoutRoot, WriteableBitmap wb, double maxLeft, double maxRight, double maxTop, double maxBottom)
 		{
 			this.wb = wb;
 
@@ -37,10 +37,10 @@ namespace SilverlightFill
 			this.imageBackupOffset = new Point(); // nothing
 
 			this.imageToBorderDist = new List<double>();
-			imageToBorderDist.Add(wb.PixelWidth);
-			imageToBorderDist.Add(0);
-			imageToBorderDist.Add(wb.PixelHeight);
-			imageToBorderDist.Add(0);
+			imageToBorderDist.Add(maxLeft);
+			imageToBorderDist.Add(maxRight);
+			imageToBorderDist.Add(maxTop);
+			imageToBorderDist.Add(maxBottom);
 		}
 	}
 }
