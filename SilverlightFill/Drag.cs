@@ -45,6 +45,7 @@ namespace SilverlightFill
 		public static void down(MouseButtonEventArgs e, InkPresenter inkCanvas, Grid LayoutRoot)
 		{
 			dragStarted = true;
+			inkCanvas.CaptureMouse();
 
 			clickedLayer = Common.hitTestLayer(e, inkCanvas);
 			initialPos = e.GetPosition(inkCanvas);
@@ -224,8 +225,8 @@ namespace SilverlightFill
 			//	Common.findNewImageToBorderDist(img, e, inkCanvas, clickedLayer, offSetLeft, offSetRight, offSetTop, offSetBottom, MainPage.layerList[clickedLayer].imageToBorderDist[LEFT], MainPage.layerList[clickedLayer].imageToBorderDist[RIGHT], MainPage.layerList[clickedLayer].imageToBorderDist[TOP], MainPage.layerList[clickedLayer].imageToBorderDist[BOTTOM]);
 			//	//Common.calculateMax(img, e, inkCanvas, clickedLayer);
 			//}
-			
 
+			inkCanvas.ReleaseMouseCapture();
 		}
 
 		private static void placeInkBackToOriginalInkPresenter(InkPresenter inkCanvas, int i, StylusPointCollection spcTemp, Stroke newStroke)
